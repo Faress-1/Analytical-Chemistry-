@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مختبر الكيمياء التحليلية - الثانوية العامة | Analytical Chemistry Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --lab-bg:#07101f; --lab-panel:rgba(10,22,39,.82); --lab-border:rgba(148,163,184,.18); --lab-blue:#38bdf8; --lab-cyan:#67e8f9; --lab-amber:#f59e0b; }
+        body { font-family:'Cairo',sans-serif; color:#e8eef7; background:
+            radial-gradient(circle at 15% 10%, rgba(14,116,144,.16), transparent 28%),
+            radial-gradient(circle at 85% 5%, rgba(79,70,229,.16), transparent 25%),
+            linear-gradient(145deg,#050b16 0%,#0a1526 48%,#07101f 100%); }
+        body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size:34px 34px; mask-image:linear-gradient(to bottom,black,transparent 90%); }
+        .glass-card { background:linear-gradient(145deg,rgba(15,30,50,.88),rgba(6,16,30,.78)); backdrop-filter:blur(18px); border:1px solid var(--lab-border); box-shadow:0 20px 55px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04); }
+        .glass-input { background:rgba(15,31,51,.88); border:1px solid rgba(148,163,184,.18); color:#fff; box-shadow:inset 0 1px 8px rgba(0,0,0,.18); }
+        .glass-input:focus { border-color:var(--lab-blue); outline:none; box-shadow:0 0 0 3px rgba(56,189,248,.10); }
+        .gradient-text { background:linear-gradient(135deg,#67e8f9 0%,#38bdf8 38%,#818cf8 70%,#c4b5fd 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .lab-scene { position:relative; border-radius:28px; overflow:hidden; background:radial-gradient(circle at 50% 25%,rgba(56,189,248,.10),transparent 32%),linear-gradient(180deg,#0c1a2b 0%,#091322 62%,#050b13 100%); min-height:520px; }
+        .lab-scene::after { content:''; position:absolute; left:0; right:0; bottom:0; height:30%; background:linear-gradient(180deg,transparent,rgba(0,0,0,.30)),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 46px); border-top:1px solid rgba(148,163,184,.12); pointer-events:none; }
+        .scene-label { background:rgba(3,10,20,.68); border:1px solid rgba(148,163,184,.15); backdrop-filter:blur(10px); }
+        .feature-chip { background:rgba(8,20,34,.72); border:1px solid rgba(148,163,184,.15); }
+        .sun-beam { position:absolute; top:-70px; right:12%; width:280px; height:460px; transform:rotate(15deg); background:linear-gradient(180deg,rgba(253,224,71,.28),rgba(253,224,71,0)); filter:blur(14px); pointer-events:none; opacity:0; transition:opacity .4s; }
+        .heat-halo { position:absolute; left:50%; bottom:56px; width:160px; height:100px; transform:translateX(-50%); background:radial-gradient(ellipse at center,rgba(251,146,60,.20),rgba(245,158,11,.08) 38%,transparent 72%); filter:blur(10px); opacity:0; transition:opacity .4s; pointer-events:none; }
+        .lab-lighting .sun-beam, .lab-active-light .sun-beam { opacity:1; }
+        .lab-heating .heat-halo, .lab-active-heat .heat-halo { opacity:1; }
+        .mini-meter { height:5px; border-radius:999px; background:rgba(148,163,184,.12); overflow:hidden; }
+        .mini-meter > span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#22d3ee,#818cf8); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .tab-btn.active { background: linear-gradient(135deg, #0284c7, #4338ca); color: #ffffff; font-weight: 700; border-color: #38bdf8; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.8); }
+        }
+        .btn-start-reaction { animation: pulse-glow 2s infinite; }
+        .explorer-card { position:relative; overflow:hidden; }
+        .explorer-card::before { content:''; position:absolute; inset:0 0 auto 0; height:1px; background:linear-gradient(90deg,transparent,rgba(56,189,248,.35),transparent); opacity:.7; }
+        .explorer-card:hover { transform:translateY(-2px); box-shadow:0 18px 45px rgba(0,0,0,.24); }
+        .formula-pill { padding:.18rem .48rem; border-radius:.55rem; background:rgba(8,47,73,.65); border:1px solid rgba(56,189,248,.20); color:#7dd3fc; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.70rem; }
+        .explorer-index { min-width:30px; height:30px; display:grid; place-items:center; border-radius:10px; background:rgba(15,23,42,.75); border:1px solid rgba(148,163,184,.12); color:#64748b; font:700 .65rem ui-monospace,monospace; }
+        .observation-mini { padding:.65rem .7rem; border-radius:14px; background:rgba(2,8,23,.38); border:1px solid rgba(148,163,184,.09); }
+        .explorer-action { min-height:40px; padding:.65rem .75rem; border-radius:13px; font-size:.72rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:.45rem; transition:.2s; }
+        .explorer-action.primary { background:linear-gradient(135deg,rgba(14,165,233,.92),rgba(79,70,229,.92)); color:#fff; border:1px solid rgba(125,211,252,.28); }
+        .explorer-action.primary:hover { filter:brightness(1.08); transform:translateY(-1px); }
+        .explorer-action.secondary { background:rgba(15,23,42,.75); color:#cbd5e1; border:1px solid rgba(148,163,184,.13); }
+        .explorer-action.secondary:hover { border-color:rgba(56,189,248,.30); color:#e0f2fe; }
+        .explorer-details { animation: explorer-reveal .18s ease-out; }
+        @keyframes explorer-reveal { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+        .equation-panel { padding:.85rem; border-radius:15px; background:rgba(2,8,23,.55); border:1px solid rgba(148,163,184,.10); }
+        .equation-text { direction:ltr; text-align:left; color:#fde68a; font:700 .72rem/1.7 ui-monospace,SFMono-Regular,Menlo,monospace; overflow-x:auto; white-space:nowrap; padding:.2rem 0; }
+        .detail-label { font-size:.68rem; font-weight:900; }
+        .detail-label.emerald { color:#6ee7b7; }
+        .detail-label.indigo { color:#a5b4fc; }
+        .copy-eq { padding:.2rem .5rem; border-radius:7px; background:rgba(30,41,59,.8); border:1px solid rgba(148,163,184,.12); color:#94a3b8; font-size:.62rem; }
+        .copy-eq:hover { color:#e2e8f0; }
+        .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:.55rem; }
+        .detail-grid > div { padding:.65rem; border-radius:12px; background:rgba(15,23,42,.48); border:1px solid rgba(148,163,184,.08); }
+        .detail-grid span { display:block; color:#64748b; font-size:.62rem; margin-bottom:.2rem; }
+        .detail-grid strong { display:block; color:#cbd5e1; font-size:.68rem; line-height:1.5; }
+        .explorer-empty { background:rgba(15,23,42,.35); }
+        .dir-ltr { direction:ltr; unicode-bidi:isolate; }
+        button:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid rgba(56,189,248,.75); outline-offset:2px; }
+        @media (max-width: 768px) {
+            header.glass-card { position:relative; }
+            header nav { width:100%; overflow-x:auto; flex-wrap:nowrap; justify-content:flex-start; scrollbar-width:none; }
+            header nav::-webkit-scrollbar { display:none; }
+            header nav .tab-btn { flex:0 0 auto; white-space:nowrap; }
+            main { padding-top:1rem; }
+            .lab-scene { min-height:460px; }
+            .detail-grid { grid-template-columns:1fr; }
+        }
+
+        .floating-nav {
+            position: fixed;
+            left: 50%;
+            bottom: max(14px, env(safe-area-inset-bottom));
+            transform: translateX(-50%);
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 7px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 24px;
+            background: rgba(15,23,42,.72);
+            backdrop-filter: blur(22px) saturate(150%);
+            -webkit-backdrop-filter: blur(22px) saturate(150%);
+            box-shadow: 0 18px 50px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .floating-nav-item {
+            min-width: 66px;
+            height: 48px;
+            padding: 5px 9px;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            color: #94a3b8;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+            transition: .18s ease;
+        }
+        .floating-nav-item .nav-icon { font-size: 17px; line-height: 18px; }
+        .floating-nav-item.active {
+            color: #fff;
+            background: rgba(56,189,248,.18);
+            border-color: rgba(56,189,248,.30);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 5px 18px rgba(14,165,233,.12);
+        }
+        .floating-nav-item:active { transform: scale(.96); }
+        .floating-more {
+            position: fixed;
+            left: 50%;
+            bottom: calc(78px + max(14px, env(safe-area-inset-bottom)));
+            transform: translateX(-50%);
+            z-index: 79;
+            width: min(290px, calc(100vw - 28px));
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 22px;
+            background: rgba(15,23,42,.88);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            box-shadow: 0 22px 55px rgba(0,0,0,.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: .18s ease;
+        }
+        .floating-more.open { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(-3px); }
+        .floating-more button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 12px;
+            border-radius: 14px;
+            color: #cbd5e1;
+            background: transparent;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .floating-more button:hover { background: rgba(255,255,255,.06); color:#fff; }
+        .floating-more .more-divider { height:1px; background:rgba(255,255,255,.08); margin:5px 4px; }
+        .chem-liquid-label { font-size: 10px; font-weight: 800; letter-spacing: .04em; }
+        .visual-color-chip { display:inline-flex; align-items:center; gap:6px; }
+        .visual-color-dot { width:10px; height:10px; border-radius:999px; border:1px solid rgba(255,255,255,.25); box-shadow:0 0 10px currentColor; }
+        .distinction-step { position:relative; }
+        .distinction-step::before { content:''; position:absolute; inset:0 auto 0 0; width:3px; border-radius:3px; background:linear-gradient(#38bdf8,#818cf8); opacity:.65; }
+        .distinction-pair { border:1px solid rgba(56,189,248,.12); background:rgba(2,6,23,.38); }
+        .distinction-verdict { background:linear-gradient(135deg,rgba(14,165,233,.10),rgba(99,102,241,.08)); border:1px solid rgba(56,189,248,.18); }
+        body.has-floating-nav { padding-bottom: 92px; }
+        @media (min-width: 901px) {
+            .floating-nav, .floating-more { display:none; }
+            body.has-floating-nav { padding-bottom:0; }
+        }
+        @media (max-width: 900px) {
+            header nav { display:none !important; }
+            header.glass-card { padding-bottom: 12px; }
+            .floating-nav { max-width: calc(100vw - 20px); overflow-x:auto; scrollbar-width:none; }
+            .floating-nav::-webkit-scrollbar { display:none; }
+            .floating-nav-item { flex:0 0 64px; }
+            .floating-more { transform: translateX(-50%) translateY(4px); }
+        }
+        @media (max-width: 520px) {
+            .floating-nav { bottom: max(8px, env(safe-area-inset-bottom)); padding:6px; border-radius:21px; }
+            .floating-nav-item { min-width:58px; flex-basis:58px; height:46px; padding-inline:5px; font-size:9px; }
+            .floating-nav-item .nav-icon { font-size:16px; }
+            .floating-more { bottom: calc(70px + max(8px, env(safe-area-inset-bottom))); }
+        }
+
+        body { font-family:'Cairo',system-ui,sans-serif; color:#f1f5f9; }
+        body .text-slate-400 { color:#cbd5e1 !important; }
+        body .text-slate-300 { color:#e2e8f0 !important; }
+        body .text-slate-200 { color:#f1f5f9 !important; }
+        body .text-slate-500 { color:#94a3b8 !important; }
+        .scene-label { background:rgba(2,8,18,.90); border:1px solid rgba(148,163,184,.24); color:#f1f5f9; box-shadow:0 8px 24px rgba(0,0,0,.28); }
+        .feature-chip { background:rgba(2,8,18,.92); border-color:rgba(148,163,184,.24); }
+        #simStatusBadge { color:#f8fafc !important; background:rgba(2,8,18,.94) !important; border-color:rgba(148,163,184,.25) !important; }
+        #simColorBadge { color:#dbeafe !important; background:rgba(8,30,50,.94) !important; border-color:rgba(56,189,248,.34) !important; }
+        #sceneObservation { color:#f8fafc !important; }
+        .lab-scene canvas { font-smoothing:antialiased; -webkit-font-smoothing:antialiased; }
+        @media (max-width:640px){
+            .lab-scene { min-height:540px; }
+            #simStatusBadge, #simColorBadge { font-size:11px !important; padding:.55rem .8rem !important; }
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scrollbar has-floating-nav">
+
+    <!-- TOP HEADER NAVBAR -->
+    <header class="glass-card sticky top-0 z-50 border-b border-slate-800 px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                    ⚗
+                </div>
+                <div>
+                    <h1 class="text-xl font-black gradient-text">مختبر الكيمياء التحليلية (الصف الثالث الثانوي)</h1>
+                    <p class="text-xs text-slate-400">Chapter 2: Qualitative Analysis & Visual Reaction Simulator</p>
+                </div>
+            </div>
+
+            <!-- TAB NAVIGATION -->
+            <nav class="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold">
+                <button onclick="switchTab('simTab')" id="btn-simTab" class="tab-btn active px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+                    <span>🔬</span> المختبر والتفاعل البصري
+                </button>
+                <button onclick="switchTab('explorerTab')" id="btn-explorerTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>🔍</span> مستكشف الأيونات
+                </button>
+                <button onclick="switchTab('calcTab')" id="btn-calcTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>⚖️</span> حاسبة الرواسب
+                </button>
+                <button onclick="switchTab('solubilityTab')" id="btn-solubilityTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>💧</span> الذوبانية في الماء
+                </button>
+                <button onclick="switchTab('agTab')" id="btn-agTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>💍</span> دليل AgNO₃
+                </button>
+                <button onclick="switchTab('distinguishTab')" id="btn-distinguishTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>🏷️</span> التمييز السريع
+                </button>
+                <button onclick="switchTab('eqTab')" id="btn-eqTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>📚</span> مكتبة المعادلات
+                </button>
+                <button onclick="switchTab('quizTab')" id="btn-quizTab" class="tab-btn px-3 py-2 rounded-xl text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                    <span>🎯</span> بنك الأسئلة
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- iOS-inspired floating quick navigation (mobile/tablet) -->
+    <div id="floatingNav" class="floating-nav" aria-label="التنقل السريع">
+        <button class="floating-nav-item active" data-float-tab="simTab" onclick="switchTab('simTab')"><span class="nav-icon">🔬</span><span>المعمل</span></button>
+        <button class="floating-nav-item" data-float-tab="explorerTab" onclick="switchTab('explorerTab')"><span class="nav-icon">🔍</span><span>الأيونات</span></button>
+        <button class="floating-nav-item" data-float-tab="calcTab" onclick="switchTab('calcTab')"><span class="nav-icon">⚖️</span><span>الحاسبة</span></button>
+        <button class="floating-nav-item" data-float-tab="distinguishTab" onclick="switchTab('distinguishTab')"><span class="nav-icon">🏷️</span><span>التمييز</span></button>
+        <button class="floating-nav-item" id="floatingMoreBtn" aria-expanded="false" onclick="toggleFloatingMore()"><span class="nav-icon">•••</span><span>المزيد</span></button>
+    </div>
+    <div id="floatingMore" class="floating-more" aria-hidden="true">
+        <button onclick="switchTab('solubilityTab')"><span>💧</span><span>الذوبانية في الماء</span></button>
+        <button onclick="switchTab('agTab')"><span>💍</span><span>دليل AgNO₃</span></button>
+        <div class="more-divider"></div>
+        <button onclick="switchTab('eqTab')"><span>📚</span><span>مكتبة المعادلات</span></button>
+        <button onclick="switchTab('quizTab')"><span>🎯</span><span>بنك الأسئلة</span></button>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- TAB 1: VISUAL SIMULATOR & DOUBLE OBSERVATION LAB -->
+        <section id="simTab" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- CONTROLS PANEL (LEFT) -->
+                <div class="lg:col-span-5 space-y-5">
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700/60 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
+                                ⚙️ إعدادات التجربة الكيميائية
+                            </h2>
+                            <span class="text-xs bg-sky-950 text-sky-300 border border-sky-800 px-2 py-0.5 rounded-full">Interactive Tube</span>
+                        </div>
+
+                        <!-- 1. Category Selection -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">1. اختر الفئة (Category):</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="catAnions" onclick="setCategory('anions')" class="py-2 px-3 rounded-xl border border-sky-500/50 bg-sky-900/30 text-sky-300 font-bold text-sm text-center">الأنيونات (Anions)</button>
+                                <button id="catCations" onclick="setCategory('cations')" class="py-2 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-sm text-center">الكاتيونات (Cations)</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. Reagent Group -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">2. المجموعة الكاشفة (Reagent Group):</label>
+                            <select id="simGroupSelect" onchange="populateSimIons()" class="w-full glass-input p-3 rounded-xl text-sm font-semibold">
+                                <!-- JS Populated -->
+                            </select>
+                        </div>
+
+                        <!-- 3. Target Ion -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">3. الشق المراد كشفه (Target Ion):</label>
+                            <select id="simIonSelect" onchange="updateSimSelection()" class="w-full glass-input p-3 rounded-xl text-sm font-bold text-sky-300">
+                                <!-- JS Populated -->
+                            </select>
+                        </div>
+
+                        <!-- 4. Test Type -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">4. نوع التجربة (Experiment Type):</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="typeMain" onclick="setTestType('main')" class="py-2.5 px-3 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 font-bold text-xs text-center flex items-center justify-center gap-1">
+                                    <span>🧪</span> التجربة الأساسية
+                                </button>
+                                <button id="typeConf" onclick="setTestType('conf')" class="py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-xs text-center flex items-center justify-center gap-1">
+                                    <span>✨</span> التجربة التأكيدية
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- START REACTION BUTTON -->
+                        <div class="pt-2">
+                            <button onclick="startReactionAnimation()" class="btn-start-reaction w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 text-white font-black text-lg shadow-xl hover:opacity-95 transition flex items-center justify-center gap-2">
+                                <span>🚀</span> ابدأ التفاعل (Start Reaction)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REAGENT DETAILS MINI-CARD -->
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span>الكاشف المضاف (Reagent):</span>
+                            <span id="reagentFormulaDisplay" class="font-bold text-yellow-400 font-mono text-sm">-</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span>اسم الكاشف بالإنجليزية:</span>
+                            <span id="reagentEnDisplay" class="font-medium text-slate-200">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REALISTIC LAB SCENE VISUALIZER (RIGHT) -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div id="labScene" class="lab-scene glass-card border border-slate-700/60 shadow-2xl flex flex-col items-center justify-center relative">
+                        <div class="sun-beam"></div>
+                        <div class="heat-halo"></div>
+
+                        <div class="absolute top-4 left-4 right-4 flex justify-between items-center z-20">
+                            <div class="scene-label px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-300">محاكاة المعمل · مشاهدة التفاعل بصريًا</div>
+                            <div class="flex gap-2">
+                                <span id="heatIndicator" class="feature-chip hidden px-3 py-1.5 rounded-xl text-[10px] font-black text-orange-300">HEAT</span>
+                                <span id="lightIndicator" class="feature-chip hidden px-3 py-1.5 rounded-xl text-[10px] font-black text-yellow-200">ضوء</span>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-5 left-5 right-5 z-20 flex justify-between items-end pointer-events-none">
+                            <div class="scene-label rounded-2xl p-3 max-w-[240px]">
+                                <div class="text-[10px] tracking-widest text-slate-500">الملاحظة</div>
+                                <div id="sceneObservation" class="text-xs font-bold text-slate-200 mt-1">جاهز للتفاعل</div>
+                            </div>
+                            <div class="scene-label rounded-2xl p-3 text-left min-w-[135px]">
+                                <div class="text-[10px] tracking-widest text-slate-500">حالة الوسط</div>
+                                <div class="mini-meter mt-2"><span id="sceneMeter" style="width:18%"></span></div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 w-full flex items-center justify-center py-10">
+                            <canvas id="tubeCanvas" width="560" height="470" class="w-full max-w-[560px] h-auto"></canvas>
+                        </div>
+
+                        <div class="absolute top-16 left-5 right-5 flex justify-center z-20 pointer-events-none">
+                            <div id="simStatusBadge" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-950/75 border border-slate-700 text-slate-300 backdrop-blur">جاهز للتفاعل (Ready)</div>
+                        </div>
+                        <div class="absolute top-16 right-5 z-20 pointer-events-none">
+                            <div id="simColorBadge" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-sky-950/70 border border-sky-800 text-sky-300 backdrop-blur">Color: Transparent</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- EYE WITNESS OBSERVATION BOX -->
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="text-base font-bold text-amber-400 flex items-center gap-2">
+                        <span>👁️</span> ماذا ترى بعينيك؟ (Eye-Witness Observation)
+                    </h3>
+                    <span class="text-xs bg-amber-950 text-amber-300 border border-amber-800 px-3 py-1 rounded-full font-bold">
+                        المنهج المصري - ثانوية عامة
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Phase 1 -->
+                    <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-800 space-y-1">
+                        <div class="text-xs font-bold text-sky-400 flex items-center justify-between">
+                            <span>المرحلة الأولى (Initial)</span>
+                            <span class="text-[10px] bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded">Before</span>
+                        </div>
+                        <p id="obsPhase1Ar" class="text-sm font-bold text-slate-200 mt-1">-</p>
+                        <p id="obsPhase1En" class="text-xs text-slate-400 font-mono">-</p>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-800 space-y-1">
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-between">
+                            <span>الملاحظة المباشرة (Immediate)</span>
+                            <span class="text-[10px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded">In Liquid / Bottom</span>
+                        </div>
+                        <p id="obsPhase2Ar" class="text-sm font-bold text-emerald-300 mt-1">-</p>
+                        <p id="obsPhase2En" class="text-xs text-emerald-400/80 font-mono">-</p>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="bg-slate-900/70 p-4 rounded-2xl border border-slate-800 space-y-1">
+                        <div class="text-xs font-bold text-amber-400 flex items-center justify-between">
+                            <span>التغير الثنائي / عند الفوهة (Double Stage)</span>
+                            <span class="text-[10px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded">At Mouth / Heat</span>
+                        </div>
+                        <p id="obsPhase3Ar" class="text-sm font-bold text-amber-300 mt-1">-</p>
+                        <p id="obsPhase3En" class="text-xs text-amber-400/80 font-mono">-</p>
+                    </div>
+                </div>
+
+                <!-- BALANCED CHEMICAL EQUATION -->
+                <div class="bg-slate-950 p-4 rounded-2xl border border-indigo-900/50 space-y-1">
+                    <div class="text-xs font-bold text-indigo-400">المعادلة الكيميائية الموزونة (Balanced Equation):</div>
+                    <div id="simEquationDisplay" class="text-base font-bold text-yellow-300 font-mono tracking-wide text-left dir-ltr overflow-x-auto py-1">
+                        -
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ION EXPLORER -->
+        <section id="explorerTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-sky-400">🔍 مستكشف كشوفات الأيونات (Ion Explorer)</h2>
+                        <p class="text-xs text-slate-400">تصفح جميع الأيونات مقسمة حسب المجموعات التنازلية لكشف الثانوية العامة</p>
+                    </div>
+                    <input type="text" id="explorerSearch" oninput="renderExplorerCards()" placeholder="بحث باسم الأيون أو الصيغة الكيميائية..." class="glass-input px-4 py-2 rounded-xl text-sm w-full md:w-72">
+                </div>
+
+                <!-- Explorer Filter Buttons -->
+                <div class="flex flex-wrap gap-2 text-xs font-bold">
+                    <button onclick="filterExplorer('all', this)" class="exp-filter-btn active bg-sky-600 text-white px-3 py-1.5 rounded-xl">الكل (All)</button>
+                    <button onclick="filterExplorer('hcl', this)" class="exp-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-xl">مجموعة HCl المخفف</button>
+                    <button onclick="filterExplorer('h2so4', this)" class="exp-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-xl">مجموعة H₂SO₄ المركز</button>
+                    <button onclick="filterExplorer('bacl2', this)" class="exp-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-xl">مجموعة BaCl₂</button>
+                    <button onclick="filterExplorer('cations', this)" class="exp-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-xl">الكاتيونات (Cations)</button>
+                </div>
+
+                <!-- Explorer Cards Grid -->
+                <div class="flex items-center justify-between gap-3 pt-1">
+                    <div class="text-[11px] text-slate-500">اضغط على بطاقة الأيون نفسها لفتح المعادلات والتفاصيل، ثم استخدم «فتح في المعمل» لتجربة نفس الكشف بصريًا.</div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="explorerCount" class="shrink-0 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-[10px] font-black text-cyan-300">0 عنصر</span>
+                        <span class="shrink-0 px-2.5 py-1 rounded-full bg-emerald-950/50 border border-emerald-800/50 text-[10px] font-black text-emerald-300">12 أنيون + 5 كاتيون</span>
+                    </div>
+                </div>
+                <div id="explorerGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+                    <!-- JS Generated -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PRECIPITATE CALCULATOR -->
+        <section id="calcTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-5">
+                <div>
+                    <h2 class="text-lg font-bold text-sky-400">⚖️ حاسبة الترسيب والذوبانية (Precipitate Predictor)</h2>
+                    <p class="text-xs text-slate-400">اختر الكاتيون والأنيون لتوقع الصيغة الناتجة، حالة الذوبان، ولون الراسب باللغتين</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cation Select -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">اختر الكاتيون (Cation):</label>
+                        <select id="calcCation" onchange="updateCalcPrediction()" class="w-full glass-input p-3 rounded-xl font-bold text-sky-300 text-sm">
+                            <option value="Ag+">فضة - Ag⁺ (Silver)</option>
+                            <option value="Pb2+">رصاص II - Pb²⁺ (Lead II)</option>
+                            <option value="Ba2+">باريوم - Ba²⁺ (Barium)</option>
+                            <option value="Ca2+">كالسيوم - Ca²⁺ (Calcium)</option>
+                            <option value="Cu2+">نحاس II - Cu²⁺ (Copper II)</option>
+                            <option value="Fe2+">حديد II - Fe²⁺ (Iron II)</option>
+                            <option value="Fe3+">حديد III - Fe³⁺ (Iron III)</option>
+                            <option value="Al3+">ألومنيوم - Al³⁺ (Aluminum)</option>
+                            <option value="Na+">صوديوم - Na⁺ (Sodium)</option>
+                        </select>
+                    </div>
+
+                    <!-- Anion Select -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">اختر الأنيون (Anion):</label>
+                        <select id="calcAnion" onchange="updateCalcPrediction()" class="w-full glass-input p-3 rounded-xl font-bold text-amber-300 text-sm">
+                            <option value="Cl-">كلوريد - Cl⁻ (Chloride)</option>
+                            <option value="Br-">بروميد - Br⁻ (Bromide)</option>
+                            <option value="I-">يوديد - I⁻ (Iodide)</option>
+                            <option value="S2-">كبريتيد - S²⁻ (Sulfide)</option>
+                            <option value="SO3 2-">كبريتيت - SO₃²⁻ (Sulfite)</option>
+                            <option value="SO4 2-">كبريتات - SO₄²⁻ (Sulfate)</option>
+                            <option value="PO4 3-">فوسفات - PO₄³⁻ (Phosphate)</option>
+                            <option value="CO3 2-">كربونات - CO₃²⁻ (Carbonate)</option>
+                            <option value="OH-">هيدروكسيد - OH⁻ (Hydroxide)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Prediction Result Box -->
+                <div id="calcResultBox" class="p-5 rounded-2xl bg-slate-900 border border-slate-700 space-y-3">
+                    <!-- JS Generated -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: WATER SOLUBILITY LAB -->
+        <section id="solubilityTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-5">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-[.25em] text-cyan-400 font-black mb-1">AQUEOUS SOLUBILITY</div>
+                        <h2 class="text-xl font-black text-slate-100">مختبر الذوبانية في الماء</h2>
+                        <p class="text-xs text-slate-400 mt-1">حدد الملح لمعرفة حالته في الماء، الأيونات الناتجة، وملاحظة الذوبان بصريًا.</p>
+                    </div>
+                    <select id="solubilitySelect" onchange="updateSolubilityLab()" class="glass-input px-4 py-3 rounded-xl text-sm font-bold text-cyan-300 w-full md:w-80"></select>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+                    <div class="lg:col-span-2 rounded-3xl bg-slate-950/60 border border-slate-800 p-5 relative overflow-hidden min-h-[330px] flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,rgba(34,211,238,.12),transparent_42%)]"></div>
+                        <canvas id="solubilityCanvas" width="330" height="330" class="relative z-10 w-full max-w-[330px]"></canvas>
+                    </div>
+                    <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-3 content-start">
+                        <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4">
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest">Salt</div>
+                            <div id="solFormula" class="text-xl font-black text-cyan-300 font-mono mt-1">-</div>
+                            <div id="solName" class="text-sm font-bold text-slate-200 mt-1">-</div>
+                        </div>
+                        <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4">
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest">Water state</div>
+                            <div id="solState" class="text-xl font-black mt-1">-</div>
+                            <div id="solStateEn" class="text-xs text-slate-400 font-mono mt-1">-</div>
+                        </div>
+                        <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 md:col-span-2">
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest">What happens</div>
+                            <div id="solObservation" class="text-sm font-bold text-slate-200 mt-2">-</div>
+                            <div id="solIons" class="text-xs text-cyan-300 font-mono mt-2">-</div>
+                        </div>
+                        <div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 md:col-span-2">
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest">Rule</div>
+                            <div id="solRule" class="text-sm font-bold text-amber-200 mt-2">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-base font-black text-cyan-300">خريطة سريعة للذوبانية</h3>
+                        <p class="text-xs text-slate-400">قواعد عامة مستخدمة في قسم التنبؤ بالراسب داخل المختبر.</p>
+                    </div>
+                    <span class="text-[10px] font-bold px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800">H₂O</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-900/50"><b class="text-emerald-300 text-sm">ذائب غالبًا</b><p class="text-xs text-slate-300 mt-2">أملاح Na⁺ و K⁺ و NH₄⁺ والنترات.</p></div>
+                    <div class="p-4 rounded-2xl bg-amber-950/30 border border-amber-900/50"><b class="text-amber-300 text-sm">الهاليدات</b><p class="text-xs text-slate-300 mt-2">Cl⁻ و Br⁻ و I⁻ غالبًا ذائبة، مع استثناءات مهمة مثل أملاح Ag⁺.</p></div>
+                    <div class="p-4 rounded-2xl bg-indigo-950/30 border border-indigo-900/50"><b class="text-indigo-300 text-sm">الكربونات</b><p class="text-xs text-slate-300 mt-2">غالبًا غير ذائبة، وتذوب أملاح الفلزات القلوية و NH₄⁺.</p></div>
+                    <div class="p-4 rounded-2xl bg-sky-950/30 border border-sky-900/50"><b class="text-sky-300 text-sm">الكبريتات</b><p class="text-xs text-slate-300 mt-2">توجد استثناءات مهمة، منها BaSO₄ شديد عدم الذوبان.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: AgNO3 MASTER GUIDE -->
+        <section id="agTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-4">
+                <div>
+                    <h2 class="text-lg font-bold text-amber-400">💍 دليل كاشف نترات الفضة (AgNO₃ Master Guide)</h2>
+                    <p class="text-xs text-slate-400">المرجع الكامل للرواسب الستة الشهيرة لنترات الفضة في منهج الثانوية العامة</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 1. Sulfite -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">الكبريتيت (SO₃²⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Sulfite</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">Ag₂SO₃</span>
+                        </div>
+                        <div class="text-xs text-amber-300 font-bold">
+                            اللون: راسب أبيض يسود بالتسخين <br>
+                            <span class="text-amber-400/80 font-mono">(White ppt turns black on heating)</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Sulfide -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">الكبريتيد (S²⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Sulfide</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">Ag₂S</span>
+                        </div>
+                        <div class="text-xs text-slate-100 font-bold">
+                            اللون: راسب أسود مباشر <br>
+                            <span class="text-slate-400 font-mono">(Black precipitate directly)</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Chloride -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">الكلوريد (Cl⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Chloride</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">AgCl</span>
+                        </div>
+                        <div class="text-xs text-sky-300 font-bold">
+                            اللون: راسب أبيض يصير بنفسجياً بالضوء ويذوب بالنشادر <br>
+                            <span class="text-sky-400/80 font-mono">(White ppt turning violet in light, soluble in NH₃)</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Bromide -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">البروميد (Br⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Bromide</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">AgBr</span>
+                        </div>
+                        <div class="text-xs text-yellow-300 font-bold">
+                            اللون: راسب أصفر باهت يغمق بالضوء وبطيء الذوبان بالنشادر <br>
+                            <span class="text-yellow-400/80 font-mono">(Pale yellow ppt, darkens in light, slowly soluble in NH₃)</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. Iodide -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">اليوديد (I⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Iodide</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">AgI</span>
+                        </div>
+                        <div class="text-xs text-amber-400 font-bold">
+                            اللون: راسب أصفر لا يذوب في محلول النشادر <br>
+                            <span class="text-amber-500/80 font-mono">(Yellow ppt, insoluble in NH₃)</span>
+                        </div>
+                    </div>
+
+                    <!-- 6. Phosphate -->
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sky-400 text-sm">الفوسفات (PO₄³⁻)</span>
+                            <span class="font-mono text-xs text-slate-400">Phosphate</span>
+                        </div>
+                        <div class="text-xs text-slate-300 font-bold">
+                            الراسب: <span class="text-white">Ag₃PO₄</span>
+                        </div>
+                        <div class="text-xs text-amber-300 font-bold">
+                            اللون: راسب أصفر يذوب في النشادر وحمض النيتريك <br>
+                            <span class="text-amber-400/80 font-mono">(Yellow ppt, soluble in NH₃ and HNO₃)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: CHEMICAL DISTINCTION -->
+        <section id="distinguishTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-5">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <div class="text-[10px] font-black tracking-[.16em] text-sky-400 uppercase">Decision Lab · Qualitative Analysis</div>
+                        <h2 class="text-xl font-black text-slate-100 mt-1">🏷️ التمييز الكيميائي بين الأملاح</h2>
+                        <p class="text-xs text-slate-400 mt-1 max-w-2xl">اختر مادتين لتحصل على كاشف التمييز، الملاحظة المتوقعة، والمعادلات الكيميائية الدقيقة.</p>
+                    </div>
+                    <div class="px-3 py-2 rounded-xl bg-slate-950/70 border border-slate-800 text-[10px] font-bold text-slate-400">اختر زوجًا واحدًا ثم جرّب الاختبار في المعمل</div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">المادة الأولى</label>
+                        <select id="distSalt1" onchange="updateDistinguishResult()" class="w-full glass-input p-3 rounded-xl font-bold text-sky-300 text-sm">
+                            <option value="Na2CO3">كربونات الصوديوم (Na₂CO₃)</option>
+                            <option value="NaHCO3">بيكربونات الصوديوم (NaHCO₃)</option>
+                            <option value="Na2SO3">كبريتيت الصوديوم (Na₂SO₃)</option>
+                            <option value="Na2S">كبريتيد الصوديوم (Na₂S)</option>
+                            <option value="Na2S2O3">ثيوكبريتات الصوديوم (Na₂S₂O₃)</option>
+                            <option value="NaCl">كلوريد الصوديوم (NaCl)</option>
+                            <option value="NaI">يوديد الصوديوم (NaI)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">المادة الثانية</label>
+                        <select id="distSalt2" onchange="updateDistinguishResult()" class="w-full glass-input p-3 rounded-xl font-bold text-amber-300 text-sm">
+                            <option value="NaHCO3">بيكربونات الصوديوم (NaHCO₃)</option>
+                            <option value="Na2SO3">كبريتيت الصوديوم (Na₂SO₃)</option>
+                            <option value="Na2S">كبريتيد الصوديوم (Na₂S)</option>
+                            <option value="Na2S2O3">ثيوكبريتات الصوديوم (Na₂S₂O₃)</option>
+                            <option value="NaCl">كلوريد الصوديوم (NaCl)</option>
+                            <option value="NaI">يوديد الصوديوم (NaI)</option>
+                            <option value="Na2CO3">كربونات الصوديوم (Na₂CO₃)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="distResultBox" class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                    <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+                        <div class="text-xs font-black text-sky-300">1 · ابحث عن الفرق</div>
+                        <p class="text-[11px] text-slate-400 mt-1">اختر كاشفًا يعطي ملاحظتين مختلفتين بوضوح.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+                        <div class="text-xs font-black text-indigo-300">2 · سجّل الملاحظة</div>
+                        <p class="text-[11px] text-slate-400 mt-1">لون الراسب، الغاز، الذوبان، أو التغير بالحرارة/الضوء.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+                        <div class="text-xs font-black text-emerald-300">3 · أكّد النتيجة</div>
+                        <p class="text-[11px] text-slate-400 mt-1">إذا كان الاختبار غير حاسم، استخدم الاختبار التأكيدي المذكور.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: EQUATION LIBRARY -->
+        <section id="eqTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-sky-400">📚 موسوعة المعادلات الكيميائية الموزونة</h2>
+                        <p class="text-xs text-slate-400">جميع معادلات الكشف الأساسية والتأكيدية للباب الثاني الموزونة مع الحالة الفيزيائية</p>
+                    </div>
+                    <input type="text" id="eqSearch" oninput="renderEqLibrary()" placeholder="بحث في المعادلات..." class="glass-input px-4 py-2 rounded-xl text-sm w-full md:w-72">
+                </div>
+
+                <div id="eqLibraryGrid" class="space-y-3">
+                    <!-- JS Generated -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 8: PRACTICE QUIZ -->
+        <section id="quizTab" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-5">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-sky-400">🎯 بنك أسئلة الكيمياء التحليلية (Interactive Quiz)</h2>
+                        <p class="text-xs text-slate-400">اختبر معلوماتك في ألوان الرواسب والكواشف وأبخرة الغازات</p>
+                    </div>
+                    <div class="text-xs font-bold bg-indigo-950 border border-indigo-800 text-indigo-300 px-3 py-1 rounded-full">
+                        النتيجة: <span id="quizScore">0</span> / <span id="quizTotal">0</span>
+                    </div>
+                </div>
+
+                <div id="quizCard" class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <!-- JS Generated -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                const rad = Math.max(0, Math.min(Array.isArray(r) ? (r[0] || 0) : (r || 0), w / 2, h / 2));
+                this.moveTo(x + rad, y);
+                this.arcTo(x + w, y, x + w, y + h, rad);
+                this.arcTo(x + w, y + h, x, y + h, rad);
+                this.arcTo(x, y + h, x, y, rad);
+                this.arcTo(x, y, x + w, y, rad);
+                this.closePath();
+            };
+        }
+
+        /* Helper interpolation functions for smooth color transitions */
+        function parseRgba(str) {
+            if(!str || str === 'transparent') return [0,0,0,0];
+            const m = str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/);
+            if(m) return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] !== undefined ? parseFloat(m[4]) : 1];
+            return [0,0,0,0];
+        }
+        function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
+        function lerpRgbaStr(c1Str, c2Str, t) {
+            const c1 = parseRgba(c1Str), c2 = parseRgba(c2Str);
+            const r = Math.round(lerp(c1[0], c2[0], t));
+            const g = Math.round(lerp(c1[1], c2[1], t));
+            const b = Math.round(lerp(c1[2], c2[2], t));
+            const a = lerp(c1[3], c2[3], t).toFixed(3);
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
+        }
+        function easeInOutCubic(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+
+        /* =========================================================================
+           DATA STRUCTURE: COMPREHENSIVE CHAPTER 2 IONS & REACTIONS
+           ========================================================================= */
+        const REACTION_DATA = {
+            anions: {
+                hcl: [
+                    {
+                        id: "CO3",
+                        nameAr: "كربونات",
+                        nameEn: "Carbonate (CO₃²⁻)",
+                        formula: "CO₃²⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "فوران شديد وتصاعد غاز CO₂",
+                            initialVisualEn: "Vigorous effervescence with CO₂ gas release",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(255, 255, 255, 0.6)",
+                            gasAtMouth: "rgba(255, 255, 255, 0.2)",
+                            gasName: "CO₂", gasColor: "rgba(220,235,245,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى الملح الصلب",
+                            obsPhase1En: "Adding Dilute HCl to solid salt",
+                            obsPhase2Ar: "فوران شديد وتصاعد غاز ثاني أكسيد الكربون (CO₂)",
+                            obsPhase2En: "Vigorous effervescence with CO₂ gas bubbles",
+                            obsPhase3Ar: "غاز CO₂ يعكر ماء الجير الرائق (Ca(OH)₂) عند مروره لفترة قصيرة",
+                            obsPhase3En: "CO₂ turns limewater milky when passed for a short time",
+                            equation: "Na₂CO₃(s) + 2HCl(aq) → 2NaCl(aq) + H₂O(l) + CO₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "MgSO₄ (aq)",
+                            reagentEn: "Magnesium Sulfate Solution",
+                            initialVisual: "راسب أبيض على البارد (White ppt on cold)",
+                            initialVisualEn: "White precipitate formed on cold",
+                            bottomColor: "rgba(255, 255, 255, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول كبريتات المغنيسيوم (MgSO₄)",
+                            obsPhase1En: "Adding Magnesium Sulfate solution",
+                            obsPhase2Ar: "تكون راسب أبيض من كربونات المغنيسيوم (MgCO₃) على البارد",
+                            obsPhase2En: "Immediate white precipitate of MgCO₃ formed on cold",
+                            obsPhase3Ar: "الراسب أبيض يذوب في حمض الهيدروكلوريك المخفف",
+                            obsPhase3En: "White precipitate dissolves in dilute HCl acid",
+                            equation: "Na₂CO₃(aq) + MgSO₄(aq) → Na₂SO₄(aq) + MgCO₃(s)↓"
+                        }
+                    },
+                    {
+                        id: "HCO3",
+                        nameAr: "بيكربونات",
+                        nameEn: "Bicarbonate (HCO₃⁻)",
+                        formula: "HCO₃⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "فوران وتصاعد غاز CO₂",
+                            initialVisualEn: "Effervescence with CO₂ gas",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(255, 255, 255, 0.6)",
+                            gasAtMouth: "rgba(255, 255, 255, 0.2)",
+                            gasName: "CO₂", gasColor: "rgba(220,235,245,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى ملح البيكربونات",
+                            obsPhase1En: "Adding Dilute HCl to Bicarbonate salt",
+                            obsPhase2Ar: "فوران وتصاعد غاز ثاني أكسيد الكربون (CO₂)",
+                            obsPhase2En: "Effervescence with colorless CO₂ gas release",
+                            obsPhase3Ar: "تعكير ماء الجير عند مرور الغاز لفترة قصيرة",
+                            obsPhase3En: "Turbidity in clear limewater on short passage",
+                            equation: "NaHCO₃(s) + HCl(aq) → NaCl(aq) + H₂O(l) + CO₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "MgSO₄ (aq) + Heat",
+                            reagentEn: "Magnesium Sulfate + Heating",
+                            initialVisual: "محلول شفاف على البارد ← راسب أبيض بعد التسخين",
+                            initialVisualEn: "Clear solution on cold → White ppt AFTER heating",
+                            bottomColor: "rgba(255, 255, 255, 0.9)",
+                            gasInLiquid: "rgba(255, 255, 255, 0.4)",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "خلط محلول البيكربونات مع كبريتات المغنيسيوم (لا يظهر راسب)",
+                            obsPhase1En: "Mixing solution with MgSO₄ (No precipitate on cold)",
+                            obsPhase2Ar: "المحلول رائق وشفاف على البارد بسبب تكون Mg(HCO₃)₂ الذائب",
+                            obsPhase2En: "Clear solution on cold due to soluble Mg(HCO₃)₂",
+                            obsPhase3Ar: "عند التسخين: يتكون راسب أبيض من MgCO₃ وتتصاعد فقاقيع CO₂",
+                            obsPhase3En: "Upon Heating: White precipitate of MgCO₃ forms with CO₂ bubbles",
+                            equation: "2NaHCO₃(aq) + MgSO₄(aq) → Na₂SO₄(aq) + Mg(HCO₃)₂(aq) ; Mg(HCO₃)₂(aq) —Δ→ MgCO₃(s)↓ + H₂O(l) + CO₂(g)↑"
+                        }
+                    },
+                    {
+                        id: "SO3",
+                        nameAr: "كبريتيت",
+                        nameEn: "Sulfite (SO₃²⁻)",
+                        formula: "SO₃²⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "تصاعد غاز SO₂ ذو الرائحة النفاذة",
+                            initialVisualEn: "Pungent SO₂ gas evolved (turns K₂Cr₂O₇ paper green)",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(226, 232, 240, 0.42)",
+                            gasAtMouth: "rgba(226, 232, 240, 0.30)",
+                            gasName: "SO₂", gasColor: "rgba(226,232,240,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى ملح الكبريتيت",
+                            obsPhase1En: "Adding Dilute HCl to Sulfite salt",
+                            obsPhase2Ar: "تصاعد غاز ثاني أكسيد الكبريت (SO₂) ذو الرائحة النفاذة",
+                            obsPhase2En: "Evolution of pungent Sulfur Dioxide gas (SO₂)",
+                            obsPhase3Ar: "يخضر ورقة مبللة بـ K₂Cr₂O₇ المحمضة بسبب تكون Cr₂(SO₄)₃ الأخضر",
+                            obsPhase3En: "Turns acidified K₂Cr₂O₇ paper green due to Cr₂(SO₄)₃",
+                            equation: "Na₂SO₃(s) + 2HCl(aq) → 2NaCl(aq) + H₂O(l) + SO₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أبيض يسود بالتسخين (White ppt turns black on heating)",
+                            initialVisualEn: "White precipitate that turns black upon heating",
+                            bottomColor: "rgba(20, 20, 20, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة (AgNO₃)",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "يتكون أولاً راسب أبيض من كبريتيت الفضة (Ag₂SO₃)",
+                            obsPhase2En: "Initially forms a white precipitate of Ag₂SO₃",
+                            obsPhase3Ar: "بالتسخين: يتحول الراسب الأبيض إلى أسود بسبب تفكك Ag₂SO₃ إلى Ag₂S و Ag",
+                            obsPhase3En: "Upon Heating: White ppt turns BLACK due to silver sulfide formation",
+                            equation: "Na₂SO₃(aq) + 2AgNO₃(aq) → 2NaNO₃(aq) + Ag₂SO₃(s)↓ (يسود بالتسخين)"
+                        }
+                    },
+                    {
+                        id: "S",
+                        nameAr: "كبريتيد",
+                        nameEn: "Sulfide (S²⁻)",
+                        formula: "S²⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "غاز H₂S كريه الرائحة يسود ورقة أسيتات الرصاص",
+                            initialVisualEn: "Rotten-egg H₂S gas blackens lead acetate paper",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(255, 255, 255, 0.4)",
+                            gasAtMouth: "rgba(226, 232, 240, 0.30)",
+                            gasName: "H₂S", gasColor: "rgba(226,232,240,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى كبريتيد الصوديوم",
+                            obsPhase1En: "Adding Dilute HCl to Sodium Sulfide",
+                            obsPhase2Ar: "تصاعد غاز كبريتيد الهيدروجين (H₂S) ذو الرائحة الكريهة (البيض الفاسد)",
+                            obsPhase2En: "Evolution of H₂S gas with offensive rotten-egg smell",
+                            obsPhase3Ar: "يسود ورقة مبللة بأسيتات الرصاص الـ II لتكون (PbS) الأسود",
+                            obsPhase3En: "Blackens lead acetate paper due to black PbS formation",
+                            equation: "Na₂S(s) + 2HCl(aq) → 2NaCl(aq) + H₂S(g)↑"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أسود مباشر (Black precipitate)",
+                            initialVisualEn: "Direct black precipitate of Ag₂S",
+                            bottomColor: "rgba(15, 15, 15, 0.98)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة (AgNO₃)",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "تكون راسب أسود مباشر من كبريتيد الفضة (Ag₂S)",
+                            obsPhase2En: "Immediate formation of black Ag₂S precipitate",
+                            obsPhase3Ar: "الراسب لا يذوب ويبقى أسود داكن في قاع الأنبوبة",
+                            obsPhase3En: "Precipitate remains intense black at test tube bottom",
+                            equation: "Na₂S(aq) + 2AgNO₃(aq) → 2NaNO₃(aq) + Ag₂S(s)↓"
+                        }
+                    },
+                    {
+                        id: "S2O3",
+                        nameAr: "ثيوكبريتات",
+                        nameEn: "Thiosulfate (S₂O₃²⁻)",
+                        formula: "S₂O₃²⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "غاز SO₂ + معلق كبريت أصفر (Yellow Sulfur suspension)",
+                            initialVisualEn: "SO₂ gas evolved + Yellow colloid sulfur precipitated",
+                            bottomColor: "rgba(234, 179, 8, 0.9)",
+                            precipitateFormula: "S",
+                            precipitateColor: "rgba(234, 179, 8, 0.96)",
+                            gasInLiquid: "rgba(226, 232, 240, 0.42)",
+                            gasAtMouth: "rgba(226, 232, 240, 0.30)",
+                            gasName: "SO₂", gasColor: "rgba(226,232,240,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى ثيوكبريتات الصوديوم",
+                            obsPhase1En: "Adding Dilute HCl to Sodium Thiosulfate",
+                            obsPhase2Ar: "تصاعد غاز SO₂ ذو الرائحة النفاذة",
+                            obsPhase2En: "Evolution of pungent Sulfur Dioxide gas (SO₂)",
+                            obsPhase3Ar: "ظهور معلق أصفر من الكبريت (S) يترسب ويتعلق في المحلول",
+                            obsPhase3En: "Appearance of yellow suspended colloidal sulfur precipitate",
+                            equation: "Na₂S₂O₃(s) + 2HCl(aq) → 2NaCl(aq) + H₂O(l) + SO₂(g)↑ + S(s)↓"
+                        },
+                        conf: {
+                            reagent: "I₂ Solution (Brown)",
+                            reagentEn: "Iodine Solution (Brown)",
+                            initialVisual: "زوال لون محلول اليود البني (Decolorization of Brown Iodine)",
+                            initialVisualEn: "Brown Iodine color completely discharged/disappears",
+                            bottomColor: "rgba(255, 255, 255, 0.1)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول اليود البني (I₂)",
+                            obsPhase1En: "Adding Brown Iodine solution",
+                            obsPhase2Ar: "زوال لون اليود البني فوراً وتكون محلول شفاف",
+                            obsPhase2En: "Immediate disappearance/decolorization of brown iodine solution",
+                            obsPhase3Ar: "تكون رباعي ثيونات الصوديوم (Na₂S₄O₆) ويوديد الصوديوم عديم اللون",
+                            obsPhase3En: "Formation of colorless Sodium Tetrathionate & Sodium Iodide",
+                            equation: "2Na₂S₂O₃(aq) + I₂(aq) → Na₂S₄O₆(aq) + 2NaI(aq)"
+                        }
+                    },
+                    {
+                        id: "NO2",
+                        nameAr: "نيتريت",
+                        nameEn: "Nitrite (NO₂⁻)",
+                        formula: "NO₂⁻",
+                        main: {
+                            reagent: "Dil. HCl",
+                            reagentEn: "Dilute Hydrochloric Acid",
+                            initialVisual: "فقاقيع عديمة اللون داخل السائل ← بني محمر عند الفوهة",
+                            initialVisualEn: "Colorless NO inside liquid → Reddish-brown NO₂ at MOUTH",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(255, 255, 255, 0.4)",
+                            gasAtMouth: "rgba(165, 48, 28, 0.95)",
+                            gasName: "NO₂", gasColor: "rgba(165,48,28,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض HCl المخفف إلى نيتريت الصوديوم",
+                            obsPhase1En: "Adding Dilute HCl to Sodium Nitrite",
+                            obsPhase2Ar: "تصاعد غاز أكسيد النيتريك (NO) عديم اللون داخل المحلول",
+                            obsPhase2En: "Evolution of COLORLESS Nitric Oxide gas (NO) inside liquid",
+                            obsPhase3Ar: "عند فوهة الأنبوبة: يتأكسد NO مع أكسجين الهواء ليتكون أبخرة بني محمر (NO₂)",
+                            obsPhase3En: "At Mouth of Tube: NO oxidizes with air to form REDDISH-BROWN NO₂ vapors",
+                            equation: "NaNO₂(s) + HCl(aq) → NaCl(aq) + HNO₂(aq) ; 3HNO₂(aq) → HNO₃(aq) + H₂O(l) + 2NO(g)↑ ; 2NO(g) + O₂(g) → 2NO₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "Acidified KMnO₄ (Purple)",
+                            reagentEn: "Acidified Potassium Permanganate (Purple)",
+                            initialVisual: "زوال لون البنفسجي لـ KMnO₄ (Decolorization of Purple KMnO₄)",
+                            initialVisualEn: "Purple KMnO₄ color completely disappears",
+                            bottomColor: "rgba(255, 255, 255, 0.1)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة برمنجنات البوتاسيوم البنفسجية المحمضة بحمض الكبريتيك",
+                            obsPhase1En: "Adding Acidified Purple Potassium Permanganate (KMnO₄)",
+                            obsPhase2Ar: "زوال لون البرمنجنات البنفسجي تماماً",
+                            obsPhase2En: "Complete discharge/disappearance of purple color",
+                            obsPhase3Ar: "تكون مركبات كبريتات عديمة اللون (MnSO₄ و K₂SO₄)",
+                            obsPhase3En: "Formation of colorless Manganese Sulfate & Potassium Sulfate",
+                            equation: "5NaNO₂ + 2KMnO₄ + 3H₂SO₄ → 5NaNO₃ + K₂SO₄ + 2MnSO₄ + 3H₂O"
+                        }
+                    }
+                ],
+                h2so4: [
+                    {
+                        id: "Cl",
+                        nameAr: "كلوريد",
+                        nameEn: "Chloride (Cl⁻)",
+                        formula: "Cl⁻",
+                        main: {
+                            reagent: "Conc. H₂SO₄ + Heat",
+                            reagentEn: "Concentrated H₂SO₄ + Heating",
+                            initialVisual: "غاز HCl عديم اللون + سحب بيضاء مع النشادر",
+                            initialVisualEn: "Colorless HCl gas → Dense WHITE CLOUDS with NH₃ rod",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(255, 255, 255, 0.5)",
+                            gasAtMouth: "rgba(255, 255, 255, 0.95)",
+                            gasName: "HCl", gasColor: "rgba(226,232,240,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض الكبريتيك المركز والتسخين",
+                            obsPhase1En: "Adding Concentrated H₂SO₄ and Heating",
+                            obsPhase2Ar: "تصاعد غاز كلوريد الهيدروجين (HCl) عديم اللون",
+                            obsPhase2En: "Evolution of colorless Hydrogen Chloride gas (HCl)",
+                            obsPhase3Ar: "يقرب ساق مبللة بمحلول النشادر (NH₃) فتتكون سحب بيضاء كثيفة (NH₄Cl)",
+                            obsPhase3En: "Glass rod dipped in Ammonia forms dense WHITE CLOUDS of NH₄Cl",
+                            equation: "2NaCl(s) + H₂SO₄(l) → Na₂SO₄(aq) + 2HCl(g)↑ ; HCl(g) + NH₃(g) → NH₄Cl(s)"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أبيض يصير بنفسجي بالضوء ويذوب بالنشادر",
+                            initialVisualEn: "White ppt turns VIOLET in light & soluble in NH₃",
+                            bottomColor: "rgba(240, 240, 255, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة (AgNO₃)",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "تكون راسب أبيض من كلوريد الفضة (AgCl)",
+                            obsPhase2En: "Formation of white precipitate of Silver Chloride (AgCl)",
+                            obsPhase3Ar: "يتحول للون البنفسجي عند تعريضه للضوء، ويذوب بفرط في محلول النشادر المركز",
+                            obsPhase3En: "Turns VIOLET when exposed to light, rapidly dissolves in conc. Ammonia",
+                            equation: "NaCl(aq) + AgNO₃(aq) → NaNO₃(aq) + AgCl(s)↓"
+                        }
+                    },
+                    {
+                        id: "Br",
+                        nameAr: "بروميد",
+                        nameEn: "Bromide (Br⁻)",
+                        formula: "Br⁻",
+                        main: {
+                            reagent: "Conc. H₂SO₄ + Heat",
+                            reagentEn: "Concentrated H₂SO₄ + Heating",
+                            initialVisual: "أبخرة برتقالية حمراء من Br₂",
+                            initialVisualEn: "ORANGE-RED Br₂ vapors",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(249, 115, 22, 0.7)",
+                            gasAtMouth: "rgba(225, 85, 20, 0.95)",
+                            gasName: "Br₂", gasColor: "rgba(225,85,20,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض H₂SO₄ المركز والتسخين",
+                            obsPhase1En: "Adding Conc. H₂SO₄ and gentle Heating",
+                            obsPhase2Ar: "تأكسد HBr جزئياً وتصاعد أبخرة البروم (Br₂) البرتقالية الحمراء",
+                            obsPhase2En: "Partial oxidation yields ORANGE-RED Bromine vapors (Br₂)",
+                            obsPhase3Ar: "الأبخرة تصفر ورقة مبللة بمحلول النشا عند الفوهة",
+                            obsPhase3En: "Orange-red vapors turn a paper soaked in starch YELLOW",
+                            equation: "2NaBr(s) + 2H₂SO₄(l) → Na₂SO₄(aq) + 2H₂O(l) + SO₂(g)↑ + Br₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أصفر باهت يغمق بالضوء وبطيء الذوبان بالنشادر",
+                            initialVisualEn: "PALE YELLOW ppt, darkens in light, slowly soluble in NH₃",
+                            bottomColor: "rgba(254, 240, 138, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "تكون راسب أصفر باهت (أبيض مصفر) من AgBr",
+                            obsPhase2En: "Formation of pale yellow (off-white) AgBr precipitate",
+                            obsPhase3Ar: "يصير داكناً في الضوء ويذوب ببطء شديد في محلول النشادر المركز",
+                            obsPhase3En: "Darkens when exposed to light, slowly dissolves in conc. Ammonia",
+                            equation: "NaBr(aq) + AgNO₃(aq) → NaNO₃(aq) + AgBr(s)↓"
+                        }
+                    },
+                    {
+                        id: "I",
+                        nameAr: "يوديد",
+                        nameEn: "Iodide (I⁻)",
+                        formula: "I⁻",
+                        main: {
+                            reagent: "Conc. H₂SO₄ + Heat",
+                            reagentEn: "Concentrated H₂SO₄ + Heating",
+                            initialVisual: "أبخرة بنفسجية تصعد وتزرق ورقة النشا",
+                            initialVisualEn: "VIOLET vapors of I₂ (Turn starch paper BLUE)",
+                            bottomColor: "transparent",
+                            gasInLiquid: "rgba(168, 85, 247, 0.7)",
+                            gasAtMouth: "rgba(145, 60, 200, 0.95)",
+                            gasName: "I₂", gasColor: "rgba(145,60,200,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض الكبريتيك المركز مع التسخين",
+                            obsPhase1En: "Adding Conc. H₂SO₄ with heating",
+                            obsPhase2Ar: "تأكسد HI وتصاعد أبخرة اليود (I₂) البنفسجية",
+                            obsPhase2En: "HI oxidizes to release dense VIOLET Iodine vapors (I₂)",
+                            obsPhase3Ar: "الأبخرة البنفسجية تزرق ورقة مبللة بمحلول النشا",
+                            obsPhase3En: "Violet vapors turn starch-soaked paper intense BLUE",
+                            equation: "2NaI(s) + 2H₂SO₄(l) → Na₂SO₄(aq) + 2H₂O(l) + SO₂(g)↑ + I₂(g)↑"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أصفر لا يذوب في النشادر",
+                            initialVisualEn: "YELLOW ppt, completely INSOLUBLE in NH₃",
+                            bottomColor: "rgba(235, 185, 30, 0.98)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "تكون راسب أصفر نقي من يوديد الفضة (AgI)",
+                            obsPhase2En: "Formation of pure yellow Silver Iodide (AgI) precipitate",
+                            obsPhase3Ar: "الراسب لا يذوب إطلاقاً في محلول النشادر المركز",
+                            obsPhase3En: "Precipitate is completely INSOLUBLE in concentrated Ammonia",
+                            equation: "NaI(aq) + AgNO₃(aq) → NaNO₃(aq) + AgI(s)↓"
+                        }
+                    },
+                    {
+                        id: "NO3",
+                        nameAr: "نترات",
+                        nameEn: "Nitrate (NO₃⁻)",
+                        formula: "NO₃⁻",
+                        main: {
+                            reagent: "Conc. H₂SO₄ + Cu turnings + Heat",
+                            reagentEn: "Conc. H₂SO₄ + Copper Turnings + Heating",
+                            initialVisual: "أبخرة بني محمر تزداد بكثافة مع خراطة النحاس",
+                            initialVisualEn: "REDDISH-BROWN NO₂ vapors increase with Cu turnings",
+                            bottomColor: "rgba(165, 48, 28, 0.3)",
+                            gasInLiquid: "rgba(165, 48, 28, 0.7)",
+                            gasAtMouth: "rgba(165, 48, 28, 0.95)",
+                            gasName: "NO₂", gasColor: "rgba(165,48,28,ALPHA)",
+                            obsPhase1Ar: "إضافة H₂SO₄ المركز والتسخين وإضافة خراطة النحاس",
+                            obsPhase1En: "Adding Conc. H₂SO₄, heating, and adding Copper turnings",
+                            obsPhase2Ar: "تصاعد غاز ثاني أكسيد النيتروجين (NO₂) البني المحمر",
+                            obsPhase2En: "Evolution of Reddish-Brown Nitrogen Dioxide gas (NO₂)",
+                            obsPhase3Ar: "تزداد كثافة الأبخرة البنية عند إضافة خراطة النحاس لتفاعلها مع الحمض",
+                            obsPhase3En: "Vapor intensity increases drastically with Cu turnings",
+                            equation: "2NaNO₃(s) + H₂SO₄(l) → Na₂SO₄(aq) + 2HNO₃(l) ; 4HNO₃(l) → 4NO₂(g)↑ + 2H₂O(l) + O₂(g)↑ ; Cu + 4HNO₃ → Cu(NO₃)₂ + 2H₂O + 2NO₂↑"
+                        },
+                        conf: {
+                            reagent: "Brown Ring Test (FeSO₄ + Conc H₂SO₄)",
+                            reagentEn: "Brown Ring Test (Fresh FeSO₄ + Conc H₂SO₄)",
+                            initialVisual: "تكون حلقة بنية عند السطح الفاصل تزول بالرج",
+                            initialVisualEn: "BROWN RING at liquid junction (Disappears on shaking)",
+                            bottomColor: "rgba(120, 53, 15, 0.8)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة كبريتات الحديد II حديثة التحضير ثم قطرات H₂SO₄ حرصاً",
+                            obsPhase1En: "Adding fresh FeSO₄ then slowly dripping Conc H₂SO₄ on walls",
+                            obsPhase2Ar: "تكون مركب الحلقة البنية [Fe(H₂O)₅NO]SO₄ عند السطح الفاصل",
+                            obsPhase2En: "Formation of Brown Ring complex at boundary level",
+                            obsPhase3Ar: "تزول الحلقة البنية فوراً عند الرج أو التسخين",
+                            obsPhase3En: "The brown ring vanishes immediately upon shaking or heating",
+                            equation: "2NaNO₃ + 6FeSO₄ + 4H₂SO₄ → 3Fe₂(SO₄)₃ + Na₂SO₄ + 4H₂O + 2NO"
+                        }
+                    }
+                ],
+                bacl2: [
+                    {
+                        id: "PO4",
+                        nameAr: "فوسفات",
+                        nameEn: "Phosphate (PO₄³⁻)",
+                        formula: "PO₄³⁻",
+                        main: {
+                            reagent: "BaCl₂ (aq)",
+                            reagentEn: "Barium Chloride Solution",
+                            initialVisual: "راسب أبيض يذوب في حمض HCl المخفف",
+                            initialVisualEn: "WHITE ppt, SOLUBLE in dilute HCl acid",
+                            bottomColor: "rgba(255, 255, 255, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول كلوريد الباريوم (BaCl₂)",
+                            obsPhase1En: "Adding Barium Chloride solution",
+                            obsPhase2Ar: "تكون راسب أبيض من فوسفات الباريوم Ba₃(PO₄)₂",
+                            obsPhase2En: "Formation of white precipitate of Barium Phosphate",
+                            obsPhase3Ar: "الراسب الأبيض يذوب تماماً عند إضافة حمض HCl المخفف",
+                            obsPhase3En: "White precipitate COMPLETELY DISSOLVES in dilute HCl acid",
+                            equation: "2Na₃PO₄ + 3BaCl₂ → 6NaCl + Ba₃(PO₄)₂(s)↓"
+                        },
+                        conf: {
+                            reagent: "AgNO₃ (aq)",
+                            reagentEn: "Silver Nitrate Solution",
+                            initialVisual: "راسب أصفر يذوب في النشادر وحمض النيتريك",
+                            initialVisualEn: "YELLOW ppt, SOLUBLE in NH₃ and HNO₃",
+                            bottomColor: "rgba(235, 185, 30, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول نترات الفضة",
+                            obsPhase1En: "Adding Silver Nitrate solution",
+                            obsPhase2Ar: "تكون راسب أصفر من فوسفات الفضة (Ag₃PO₄)",
+                            obsPhase2En: "Formation of yellow Silver Phosphate (Ag₃PO₄) precipitate",
+                            obsPhase3Ar: "الراسب الأصفر يذوب في محلول النشادر وحمض النيتريك",
+                            obsPhase3En: "Yellow precipitate dissolves in both Ammonia and Nitric Acid",
+                            equation: "Na₃PO₄ + 3AgNO₃ → 3NaNO₃ + Ag₃PO₄(s)↓"
+                        }
+                    },
+                    {
+                        id: "SO4",
+                        nameAr: "كبريتات",
+                        nameEn: "Sulfate (SO₄²⁻)",
+                        formula: "SO₄²⁻",
+                        main: {
+                            reagent: "BaCl₂ (aq)",
+                            reagentEn: "Barium Chloride Solution",
+                            initialVisual: "راسب أبيض لا يذوب في حمض HCl المخفف",
+                            initialVisualEn: "WHITE ppt, INSOLUBLE in dilute HCl acid",
+                            bottomColor: "rgba(255, 255, 255, 0.98)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول كلوريد الباريوم (BaCl₂)",
+                            obsPhase1En: "Adding Barium Chloride solution",
+                            obsPhase2Ar: "تكون راسب أبيض من كبريتات الباريوم (BaSO₄)",
+                            obsPhase2En: "Formation of white Barium Sulfate precipitate",
+                            obsPhase3Ar: "الراسب الأبيض لا يذوب مطلقاً في حمض HCl المخفف (عكس الفوسفات)",
+                            obsPhase3En: "White precipitate is INSOLUBLE in dilute HCl (Unlike Phosphate)",
+                            equation: "Na₂SO₄ + BaCl₂ → 2NaCl + BaSO₄(s)↓"
+                        },
+                        conf: {
+                            reagent: "(CH₃COO)₂Pb (aq)",
+                            reagentEn: "Lead II Acetate Solution",
+                            initialVisual: "راسب أبيض من كبريتات الرصاص",
+                            initialVisualEn: "WHITE precipitate of Lead Sulfate (PbSO₄)",
+                            bottomColor: "rgba(245, 245, 245, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول أسيتات الرصاص الـ II",
+                            obsPhase1En: "Adding Lead (II) Acetate solution",
+                            obsPhase2Ar: "تكون راسب أبيض مباشر من كبريتات الرصاص (PbSO₄)",
+                            obsPhase2En: "Direct formation of white Lead Sulfate precipitate",
+                            obsPhase3Ar: "الراسب مستقر يترسب في القاع",
+                            obsPhase3En: "Stable precipitate settles at tube bottom",
+                            equation: "Na₂SO₄ + (CH₃COO)₂Pb → 2CH₃COONa + PbSO₄(s)↓"
+                        }
+                    }
+                ]
+            },
+            cations: {
+                group: [
+                    {
+                        id: "Cu2",
+                        nameAr: "نحاس II",
+                        nameEn: "Copper II (Cu²⁺)",
+                        formula: "Cu²⁺",
+                        main: {
+                            reagent: "H₂S + Dil. HCl",
+                            reagentEn: "Hydrogen Sulfide in Acidic Medium",
+                            initialVisual: "راسب أسود من كبريتيد النحاس II",
+                            initialVisualEn: "Black CuS precipitate",
+                            bottomColor: "rgba(10, 10, 10, 0.98)",
+                            gasInLiquid: "rgba(255, 255, 255, 0.15)",
+                            gasAtMouth: "transparent",
+                            gasName: "H₂S", gasColor: "rgba(226,232,240,ALPHA)",
+                            obsPhase1Ar: "تحميض محلول الملح بحمض HCl المخفف ثم تمرير غاز كبريتيد الهيدروجين (H₂S)",
+                            obsPhase1En: "Acidify the salt solution with dilute HCl, then pass H₂S gas",
+                            obsPhase2Ar: "يتكون راسب أسود من كبريتيد النحاس II (CuS)",
+                            obsPhase2En: "A black precipitate of CuS forms",
+                            obsPhase3Ar: "الراسب الأسود يذوب في حمض النيتريك الساخن",
+                            obsPhase3En: "The black precipitate dissolves in hot nitric acid",
+                            equation: "CuSO₄(aq) + H₂S(g) → CuS(s)↓ + H₂SO₄(aq)"
+                        },
+                        conf: {
+                            reagent: "Hot Conc. HNO₃",
+                            reagentEn: "Hot Concentrated Nitric Acid",
+                            initialVisual: "ذوبان الراسب الأسود مع التسخين وتكون محلول أزرق",
+                            initialVisualEn: "Black CuS dissolves on heating with nitric acid forming blue solution",
+                            bottomColor: "rgba(10, 10, 10, 0.10)",
+                            sampleState: "solution",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "rgba(165, 48, 28, 0.20)",
+                            gasName: "NO₂", gasColor: "rgba(165,48,28,ALPHA)",
+                            obsPhase1Ar: "إضافة حمض النيتريك المركز الساخن إلى الراسب الأسود",
+                            obsPhase1En: "Adding hot concentrated nitric acid to the black precipitate",
+                            obsPhase2Ar: "يبدأ الراسب الأسود في الذوبان ويتكون محلول نترات النحاس II الأزرق",
+                            obsPhase2En: "The black precipitate dissolves, forming blue copper(II) nitrate solution",
+                            obsPhase3Ar: "تصاعد أبخرة بني محمر من ثاني أكسيد النيتروجين",
+                            obsPhase3En: "Reddish-brown NO₂ fumes evolve",
+                            equation: "CuS(s) + 4HNO₃(conc.) → Cu(NO₃)₂(aq) + S(s) + 2NO₂(g)↑ + 2H₂O(l)"
+                        }
+                    },
+                    {
+                        id: "Al3",
+                        nameAr: "ألومنيوم",
+                        nameEn: "Aluminum (Al³⁺)",
+                        formula: "Al³⁺",
+                        main: {
+                            reagent: "NH₄OH (aq)",
+                            reagentEn: "Dilute Ammonium Hydroxide",
+                            initialVisual: "راسب أبيض جيلاتيني يذوب في الأحماض",
+                            initialVisualEn: "White gelatinous ppt, soluble in dilute acids",
+                            bottomColor: "rgba(240, 248, 255, 0.75)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة هيدروكسيد الأمونيوم (محلول النشادر)",
+                            obsPhase1En: "Adding Ammonium Hydroxide solution",
+                            obsPhase2Ar: "تكون راسب أبيض جيلاتيني من Al(OH)₃",
+                            obsPhase2En: "Formation of WHITE GELATINOUS Al(OH)₃ precipitate",
+                            obsPhase3Ar: "الراسب يذوب في الأحماض المخففة",
+                            obsPhase3En: "Precipitate dissolves easily in dilute acids",
+                            equation: "AlCl₃ + 3NH₄OH → 3NH₄Cl + Al(OH)₃(s)↓"
+                        },
+                        conf: {
+                            reagent: "Excess NaOH (aq)",
+                            reagentEn: "Excess Sodium Hydroxide",
+                            initialVisual: "راسب أبيض يذوب في الزيادة ليتكون ميتا ألومينات الصوديوم",
+                            initialVisualEn: "White ppt DISSOLVES in excess NaOH forming NaAlO₂",
+                            bottomColor: "rgba(255, 255, 255, 0.1)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة قطرات NaOH يتكون راسب أبيض",
+                            obsPhase1En: "Adding NaOH drops forms white precipitate",
+                            obsPhase2Ar: "عند إضافة زيادة من NaOH: يذوب الراسب بالكامل ويصبح المحلول رائقاً",
+                            obsPhase2En: "Adding EXCESS NaOH: Precipitate COMPLETELY DISSOLVES",
+                            obsPhase3Ar: "سبب الذوبان هو تكون ميتا ألومينات الصوديوم (NaAlO₂) الذائبة في الماء",
+                            obsPhase3En: "Dissolution due to soluble Sodium Meta-aluminate (NaAlO₂)",
+                            equation: "Al(OH)₃ + NaOH → NaAlO₂(aq) + 2H₂O"
+                        }
+                    },
+                    {
+                        id: "Fe2",
+                        nameAr: "حديد II",
+                        nameEn: "Iron II (Fe²⁺)",
+                        formula: "Fe²⁺",
+                        main: {
+                            reagent: "NH₄OH (aq)",
+                            reagentEn: "Ammonium Hydroxide",
+                            initialVisual: "راسب أبيض مخضر يتحول للخضرة الداكنة بالهواء",
+                            initialVisualEn: "Dirty white ppt turning GREENISH in air",
+                            bottomColor: "rgba(45, 105, 70, 0.88)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول هيدروكسيد الأمونيوم",
+                            obsPhase1En: "Adding Ammonium Hydroxide solution",
+                            obsPhase2Ar: "تكون راسب أبيض مخضر من هيدروكسيد الحديد II Fe(OH)₂",
+                            obsPhase2En: "Formation of DIRTY WHITE / GREENISH Fe(OH)₂ precipitate",
+                            obsPhase3Ar: "عند التعريض للهواء يتحول لونه إلى الأخضر الداكن ويذوب في الأحماض",
+                            obsPhase3En: "Darkens to deep green in air, soluble in acids",
+                            equation: "FeSO₄ + 2NH₄OH → (NH₄)₂SO₄ + Fe(OH)₂(s)↓"
+                        },
+                        conf: {
+                            reagent: "NaOH (aq)",
+                            reagentEn: "Sodium Hydroxide",
+                            initialVisual: "راسب أبيض مخضر لا يذوب في الزيادة من NaOH",
+                            initialVisualEn: "Greenish-white ppt, INSOLUBLE in excess NaOH",
+                            bottomColor: "rgba(45, 105, 70, 0.88)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول هيدروكسيد الصوديوم",
+                            obsPhase1En: "Adding Sodium Hydroxide solution",
+                            obsPhase2Ar: "تكون راسب أبيض مخضر من Fe(OH)₂",
+                            obsPhase2En: "Formation of greenish-white Fe(OH)₂ precipitate",
+                            obsPhase3Ar: "الراسب لا يذوب في الزيادة من هيدروكسيد الصوديوم",
+                            obsPhase3En: "Precipitate DOES NOT dissolve in excess NaOH",
+                            equation: "FeSO₄ + 2NaOH → Na₂SO₄ + Fe(OH)₂(s)↓"
+                        }
+                    },
+                    {
+                        id: "Fe3",
+                        nameAr: "حديد III",
+                        nameEn: "Iron III (Fe³⁺)",
+                        formula: "Fe³⁺",
+                        main: {
+                            reagent: "NH₄OH (aq)",
+                            reagentEn: "Ammonium Hydroxide",
+                            initialVisual: "راسب بني محمر جيلاتيني يذوب في الأحماض",
+                            initialVisualEn: "REDDISH-BROWN gelatinous ppt, soluble in acids",
+                            bottomColor: "rgba(140, 40, 20, 0.92)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول هيدروكسيد الأمونيوم",
+                            obsPhase1En: "Adding Ammonium Hydroxide solution",
+                            obsPhase2Ar: "تكون راسب بني محمر جيلاتيني من Fe(OH)₃",
+                            obsPhase2En: "Formation of REDDISH-BROWN gelatinous Fe(OH)₃ precipitate",
+                            obsPhase3Ar: "الراسب يذوب بسهولة في الأحماض المخففة",
+                            obsPhase3En: "Precipitate dissolves in dilute acids",
+                            equation: "FeCl₃ + 3NH₄OH → 3NH₄Cl + Fe(OH)₃(s)↓"
+                        },
+                        conf: {
+                            reagent: "NaOH (aq)",
+                            reagentEn: "Sodium Hydroxide",
+                            initialVisual: "راسب بني محمر لا يذوب في الزيادة من NaOH",
+                            initialVisualEn: "Reddish-brown ppt, INSOLUBLE in excess NaOH",
+                            bottomColor: "rgba(140, 40, 20, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول هيدروكسيد الصوديوم",
+                            obsPhase1En: "Adding Sodium Hydroxide solution",
+                            obsPhase2Ar: "تكون راسب بني محمر جيلاتيني من هيدروكسيد الحديد III",
+                            obsPhase2En: "Immediate formation of reddish-brown Fe(OH)₃ precipitate",
+                            obsPhase3Ar: "الراسب لا يذوب في الزيادة من NaOH",
+                            obsPhase3En: "Precipitate is INSOLUBLE in excess NaOH",
+                            equation: "FeCl₃ + 3NaOH → 3NaCl + Fe(OH)₃(s)↓"
+                        }
+                    },
+                    {
+                        id: "Ca2",
+                        nameAr: "كالسيوم",
+                        nameEn: "Calcium (Ca²⁺)",
+                        formula: "Ca²⁺",
+                        main: {
+                            reagent: "(NH₄)₂CO₃ (aq)",
+                            reagentEn: "Ammonium Carbonate Solution",
+                            initialVisual: "راسب أبيض يذوب في حمض HCl والماء المحمل بـ CO₂",
+                            initialVisualEn: "WHITE ppt, soluble in HCl & CO₂-water",
+                            bottomColor: "rgba(255, 255, 255, 0.95)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "إضافة محلول كربونات الأمونيوم",
+                            obsPhase1En: "Adding Ammonium Carbonate solution",
+                            obsPhase2Ar: "تكون راسب أبيض من كربونات الكالسيوم CaCO₃",
+                            obsPhase2En: "Formation of white Calcium Carbonate (CaCO₃) precipitate",
+                            obsPhase3Ar: "الراسب يذوب في حمض HCl المخفف وفي الماء المحمل بـ CO₂",
+                            obsPhase3En: "Precipitate dissolves in dilute HCl and water containing CO₂",
+                            equation: "CaCl₂ + (NH₄)₂CO₃ → 2NH₄Cl + CaCO₃(s)↓"
+                        },
+                        conf: {
+                            reagent: "Dilute H₂SO₄ / Flame Test",
+                            reagentEn: "Dilute H₂SO₄ or Brick-Red Flame Test",
+                            initialVisual: "راسب أبيض مع H₂SO₄ / لهب أحمر طوبي (Brick-Red)",
+                            initialVisualEn: "White ppt with H₂SO₄ / BRICK-RED dry flame color",
+                            bottomColor: "rgba(255, 255, 255, 0.9)",
+                            gasInLiquid: "transparent",
+                            gasAtMouth: "transparent",
+                            obsPhase1Ar: "اختبار اللهب الجاف لكشف الكالسيوم",
+                            obsPhase1En: "Dry Flame Test for Calcium Cation",
+                            obsPhase2Ar: "يتلون لهب بنزن باللون الأحمر الطوبي (Brick-Red)",
+                            obsPhase2En: "Bunsen flame turns distinctive BRICK-RED color",
+                            obsPhase3Ar: "مع حمض H₂SO₄ المخفف يتكون راسب أبيض من CaSO₄",
+                            obsPhase3En: "With Dilute H₂SO₄, forms white precipitate of CaSO₄",
+                            equation: "CaCl₂ + H₂SO₄ → 2HCl + CaSO₄(s)↓"
+                        }
+                    }
+                ]
+            }
+        };
+
+        /* =========================================================================
+           GLOBAL APP STATE & INITIALIZATION
+           ========================================================================= */
+        let currentCategory = 'anions';
+        let currentGroupKey = 'hcl';
+        let currentIonId = 'CO3';
+        let currentTestType = 'main';
+
+        let animationFrameId = null;
+        let isAnimating = false;
+
+        window.onload = function() {
+            setCategory('anions');
+            renderExplorerCards();
+            updateCalcPrediction();
+            updateDistinguishResult();
+            initSolubilityLab();
+            renderEqLibrary();
+            loadQuizQuestion();
+            resizeCanvas();
+            const initialRxn = getSelectedReaction();
+            if (initialRxn) updateSimSelection();
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            const target = document.getElementById(tabId);
+            if (!target) return;
+            target.classList.remove('hidden');
+            const topBtn = document.getElementById('btn-' + tabId);
+            if (topBtn) topBtn.classList.add('active');
+
+            document.querySelectorAll('.floating-nav-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.floatTab === tabId);
+            });
+            const more = document.getElementById('floatingMore');
+            const moreBtn = document.getElementById('floatingMoreBtn');
+            const inMore = ['solubilityTab','agTab','eqTab','quizTab'].includes(tabId);
+            if (more) { more.classList.remove('open'); more.setAttribute('aria-hidden','true'); }
+            if (moreBtn) moreBtn.setAttribute('aria-expanded','false');
+            if (inMore && moreBtn) moreBtn.classList.add('active');
+
+            if (tabId === 'simTab') {
+                resizeCanvas();
+                drawTubeState(0, getSelectedReaction());
+            }
+            if (tabId === 'solubilityTab') updateSolubilityLab();
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        function toggleFloatingMore() {
+            const more = document.getElementById('floatingMore');
+            const btn = document.getElementById('floatingMoreBtn');
+            if (!more || !btn) return;
+            const open = more.classList.toggle('open');
+            more.setAttribute('aria-hidden', String(!open));
+            btn.setAttribute('aria-expanded', String(open));
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            const btnAnions = document.getElementById('catAnions');
+            const btnCations = document.getElementById('catCations');
+
+            if (cat === 'anions') {
+                btnAnions.className = "py-2 px-3 rounded-xl border border-sky-500/50 bg-sky-900/30 text-sky-300 font-bold text-sm text-center";
+                btnCations.className = "py-2 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-sm text-center";
+            } else {
+                btnCations.className = "py-2 px-3 rounded-xl border border-sky-500/50 bg-sky-900/30 text-sky-300 font-bold text-sm text-center";
+                btnAnions.className = "py-2 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-sm text-center";
+            }
+
+            populateSimGroups();
+        }
+
+        function populateSimGroups() {
+            const groupSelect = document.getElementById('simGroupSelect');
+            groupSelect.innerHTML = "";
+
+            if (currentCategory === 'anions') {
+                groupSelect.innerHTML = `
+                    <option value="hcl">مجموعة حمض الهيدروكلوريك المخفف (Dil. HCl Group)</option>
+                    <option value="h2so4">مجموعة حمض الكبريتيك المركز (Conc. H₂SO₄ Group)</option>
+                    <option value="bacl2">مجموعة كلوريد الباريوم (BaCl₂ Group)</option>
+                `;
+            } else {
+                groupSelect.innerHTML = `
+                    <option value="group">الكاتيونات الرئيسية (Main Analytical Cations)</option>
+                `;
+            }
+
+            populateSimIons();
+        }
+
+        function populateSimIons() {
+            currentGroupKey = document.getElementById('simGroupSelect').value;
+            const ionSelect = document.getElementById('simIonSelect');
+            ionSelect.innerHTML = "";
+
+            const ionsList = REACTION_DATA[currentCategory][currentGroupKey] || [];
+            ionsList.forEach(ion => {
+                const opt = document.createElement('option');
+                opt.value = ion.id;
+                opt.textContent = `${ion.nameAr} - ${ion.formula} (${ion.nameEn})`;
+                ionSelect.appendChild(opt);
+            });
+
+            if (ionsList.length > 0) {
+                currentIonId = ionsList[0].id;
+            }
+
+            updateSimSelection();
+        }
+
+        function setTestType(type) {
+            currentTestType = type;
+            const btnMain = document.getElementById('typeMain');
+            const btnConf = document.getElementById('typeConf');
+
+            if (type === 'main') {
+                btnMain.className = "py-2.5 px-3 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 font-bold text-xs text-center flex items-center justify-center gap-1";
+                btnConf.className = "py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-xs text-center flex items-center justify-center gap-1";
+            } else {
+                btnConf.className = "py-2.5 px-3 rounded-xl border border-indigo-500/50 bg-indigo-950/40 text-indigo-300 font-bold text-xs text-center flex items-center justify-center gap-1";
+                btnMain.className = "py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-xs text-center flex items-center justify-center gap-1";
+            }
+
+            updateSimSelection();
+        }
+
+        function getSelectedReaction() {
+            const list = REACTION_DATA[currentCategory][currentGroupKey] || [];
+            const ionObj = list.find(i => i.id === currentIonId) || list[0];
+            if (!ionObj) return null;
+            return {
+                ionObj: ionObj,
+                data: currentTestType === 'main' ? ionObj.main : ionObj.conf
+            };
+        }
+
+        function getVisualColorName(data) {
+            const text = [data?.reagent, data?.reagentEn, data?.initialVisual, data?.initialVisualEn, data?.obsPhase1Ar, data?.obsPhase2Ar, data?.obsPhase3Ar].filter(Boolean).join(' ').toLowerCase();
+            const ppt = /راسب|precipitate|ppt/.test(text);
+
+            if (/brown ring|الحلقة البنية/.test(text)) return 'حلقة بنية عند السطح الفاصل';
+            if (/s₂o₃|thiosulfate|ثيوكبريتات|yellow sulfur|كبريت.*أصفر/.test(text)) return 'SO₂ عديم اللون + راسب كبريت أصفر';
+            if (/ag₂so₃|silver sulfite|كبريتيت الفضة|يسود بالتسخين|turns black on heating/.test(text)) return 'راسب أبيض → أسود بالتسخين';
+            if (/ag₂s(?!o)|silver sulfide|كبريتيد الفضة/.test(text)) return 'راسب أسود';
+            if (/agcl|silver chloride|كلوريد الفضة/.test(text) && ppt) return 'راسب أبيض → بنفسجي بالضوء';
+            if (/agbr|silver bromide|بروميد الفضة/.test(text) && ppt) return 'راسب أبيض مصفر → يغمق بالضوء';
+            if (/(^|[^a-z])agi($|[^a-z])|silver iodide|يوديد الفضة/.test(text) && ppt) return 'راسب أصفر';
+            if (/ag₃po₄|silver phosphate|فوسفات الفضة/.test(text) && ppt) return 'راسب أصفر';
+            if (/caso₄|calcium sulfate|كبريتات الكالسيوم|brick|طوبي/.test(text)) return 'راسب أبيض + لهب أحمر طوبي';
+            if (/baso₄|ba₃\(po₄\)₂|pbso₄|barium sulfate|barium phosphate|lead sulfate|كبريتات الباريوم|فوسفات الباريوم|كبريتات الرصاص/.test(text) && ppt) return 'راسب أبيض';
+            if (/sulfate|phosphate|كبريتات|فوسفات/.test(text) && ppt) return 'راسب أبيض';
+            if (/cus|copper sulfide|كبريتيد النحاس/.test(text)) return /اختفاء الراسب/.test(data?.initialVisual || '') ? 'يذوب الراسب الأسود → محلول أزرق' : 'راسب أسود';
+            if (/fe\(oh\)₃|ferric hydroxide|هيدروكسيد الحديد.*iii|حديد iii/.test(text)) return 'راسب بني محمر';
+            if (/fe\(oh\)₂|ferrous hydroxide|هيدروكسيد الحديد.*ii|حديد ii/.test(text)) return 'راسب أبيض مخضر';
+            if (/al\(oh\)₃|aluminum hydroxide|هيدروكسيد الألومنيوم/.test(text)) return 'راسب أبيض جيلاتيني';
+            if (/caco₃|calcium carbonate|كربونات الكالسيوم/.test(text)) return 'راسب أبيض';
+            if (/kmno₄|kmno4|permanganate|برمنجنات/.test(text)) return 'بنفسجي يزول بالتفاعل';
+            if (/i₂ solution|iodine solution|محلول اليود|i₂\(aq\)/.test(text)) return 'بني يزول بالتفاعل';
+            if (/br₂|br2|bromine|البروم/.test(text) && /vapor|vapour|vapors|أبخرة|بخار/.test(text)) return 'أبخرة برتقالية محمرة';
+            if (/i₂|i2|iodine|اليود/.test(text) && /vapor|vapour|vapors|أبخرة|بخار/.test(text)) return 'أبخرة بنفسجية';
+            if (/no₂|no2|nitrogen dioxide|ثاني أكسيد النيتروجين/.test(text)) return 'عديم اللون بالداخل ← بني محمر عند الفوهة';
+            if (/hcl|hydrogen chloride|كلوريد الهيدروجين|h₂s|h2s|hydrogen sulfide|كبريتيد الهيدروجين|so₂|so2|sulfur dioxide|ثاني أكسيد الكبريت|co₂|co2|carbon dioxide|ثاني أكسيد الكربون/.test(text) && /gas|غاز|تصاعد|فوران/.test(text)) return 'غاز عديم اللون';
+            if (/cu\b|cuso₄|cuso4|copper sulfate|كبريتات النحاس|نحاس/.test(text)) return 'محلول أزرق';
+            if (/fe\s*so₄|feso₄|ferrous sulfate|كبريتات الحديدوز/.test(text)) return 'محلول أخضر باهت';
+            if (/fecl₃|fecl3|ferric chloride|كلوريد الحديد.*iii/.test(text)) return 'محلول أصفر';
+            return 'عديم اللون';
+        }
+
+        /* Smooth Liquid Appearance Animation */
+        function getLiquidAppearance(data, p) {
+            const text = [data?.reagent,data?.reagentEn,data?.initialVisual,data?.initialVisualEn,data?.obsPhase1Ar,data?.obsPhase2Ar,data?.obsPhase2En,data?.obsPhase3Ar].filter(Boolean).join(' ').toLowerCase();
+            let startColor = null, endColor = null, fadeT = 0;
+
+            if (/kmno₄|kmno4|permanganate|برمنجنات/.test(text)) {
+                startColor = 'rgba(168, 85, 247, 0.65)';
+                endColor = 'rgba(168, 85, 247, 0.0)';
+                fadeT = easeInOutCubic(Math.min(1, Math.max(0, (p - 0.20) / 0.65)));
+                return lerpRgbaStr(startColor, endColor, fadeT);
+            } else if (/i₂|i2|iodine solution|iodine|اليود/.test(text) && !/بخار|vapor|vapour/.test(text)) {
+                startColor = 'rgba(180, 83, 9, 0.70)';
+                endColor = 'rgba(180, 83, 9, 0.0)';
+                fadeT = easeInOutCubic(Math.min(1, Math.max(0, (p - 0.15) / 0.65)));
+                return lerpRgbaStr(startColor, endColor, fadeT);
+            } else if (/cuso₄|cuso4|copper sulfate|كبريتات النحاس/.test(text) || /cu\(no₃\)₂/.test(text) || (/cus/.test(text) && /dissolves|ذوبان/.test(text))) {
+                startColor = 'rgba(56, 189, 248, 0.0)';
+                endColor = 'rgba(14, 116, 144, 0.55)';
+                fadeT = easeInOutCubic(Math.min(1, Math.max(0, (p - 0.25) / 0.60)));
+                return lerpRgbaStr(startColor, endColor, fadeT);
+            } else if (/feso₄|feso4|ferrous sulfate|كبريتات الحديد/.test(text)) {
+                return 'rgba(74, 222, 128, 0.25)';
+            } else if (/fecl₃|fecl3|ferric chloride|كلوريد الحديد/.test(text)) {
+                return 'rgba(234, 179, 8, 0.35)';
+            } else if (/brown ring|الحلقة البنية/.test(text)) {
+                return 'rgba(120, 53, 15, 0.30)';
+            }
+            return null;
+        }
+
+        function updateSimSelection() {
+            currentIonId = document.getElementById('simIonSelect').value;
+            const rxn = getSelectedReaction();
+            if (!rxn) return;
+
+            document.getElementById('reagentFormulaDisplay').textContent = rxn.data.reagent;
+            document.getElementById('reagentEnDisplay').textContent = rxn.data.reagentEn;
+
+            document.getElementById('obsPhase1Ar').textContent = rxn.data.obsPhase1Ar;
+            document.getElementById('obsPhase1En').textContent = rxn.data.obsPhase1En;
+
+            document.getElementById('obsPhase2Ar').textContent = rxn.data.obsPhase2Ar;
+            document.getElementById('obsPhase2En').textContent = rxn.data.obsPhase2En;
+
+            document.getElementById('obsPhase3Ar').textContent = rxn.data.obsPhase3Ar;
+            document.getElementById('obsPhase3En').textContent = rxn.data.obsPhase3En;
+
+            document.getElementById('simEquationDisplay').textContent = rxn.data.equation;
+
+            document.getElementById('simStatusBadge').textContent = "جاهز للتفاعل (Ready)";
+            document.getElementById('simStatusBadge').className = "px-3 py-1 rounded-full text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300";
+
+            document.getElementById('simColorBadge').textContent = 'اللون: ' + getVisualColorName(rxn.data);
+            updateSceneFeatures(rxn);
+
+            if (isAnimating) {
+                cancelAnimationFrame(animationFrameId);
+                isAnimating = false;
+            }
+            drawTubeState(0, rxn);
+        }
+
+        function resizeCanvas() {
+            const canvas = document.getElementById('tubeCanvas');
+            if (canvas) {}
+        }
+
+        function startReactionAnimation(){
+            const rxn=getSelectedReaction();if(!rxn)return;
+            if(isAnimating)cancelAnimationFrame(animationFrameId);
+            isAnimating=true;let startTime=null;
+            const duration=4200;
+            const badge=document.getElementById('simStatusBadge');
+            if(badge){badge.textContent='⚡ التفاعل جارٍ... (Reacting)';badge.className='px-3 py-1 rounded-full text-xs font-bold bg-amber-950 border border-amber-700 text-amber-300 animate-pulse';}
+            drawTubeState(.01,rxn);
+            function animStep(timestamp){
+                if(!startTime)startTime=timestamp;
+                const progress=Math.min((timestamp-startTime)/duration,1);
+                drawTubeState(progress,rxn);
+                if(progress<1)animationFrameId=requestAnimationFrame(animStep);
+                else{isAnimating=false;if(badge){badge.textContent='✅ اكتمل التفاعل (Completed)';badge.className='px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 border border-emerald-700 text-emerald-300';}}
+            }
+            animationFrameId=requestAnimationFrame(animStep);
+        }
+
+        function stepNeedsHeat(text) {
+            if (/brown ring|الحلقة البنية/.test(text)) return false;
+            return /heat|heating|bunsen|تسخين|التسخين|لهب|حرارة/.test(text);
+        }
+
+        function updateSceneFeatures(rxn) {
+            const data = rxn?.data || {};
+            const text = [data.reagent, data.reagentEn, data.initialVisual, data.initialVisualEn, data.obsPhase1Ar, data.obsPhase2Ar, data.obsPhase3Ar, data.obsPhase3En].join(' ').toLowerCase();
+            const heat = stepNeedsHeat(text);
+            const light = /light|الضوء|ضوء|exposed to light/.test(text);
+            const scene = document.getElementById('labScene');
+            if (scene) scene.classList.toggle('lab-active-heat', heat);
+            if (scene) scene.classList.toggle('lab-active-light', light);
+            document.getElementById('heatIndicator')?.classList.toggle('hidden', !heat);
+            document.getElementById('lightIndicator')?.classList.toggle('hidden', !light);
+            const obs = document.getElementById('sceneObservation');
+            if (obs) obs.textContent = heat ? 'تأثير التسخين / الملاحظة الحرارية' : light ? 'التعرض للضوء / ملاحظة ضوئية' : 'ملاحظة تفاعل رطب / تكوّن راسب';
+            const meter = document.getElementById('sceneMeter');
+            if (meter) meter.style.width = heat ? '88%' : light ? '72%' : '36%';
+        }
+
+        function drawFlame(ctx, x, y, scale=1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            const t = performance.now() / 115;
+            const sway = Math.sin(t) * 3 + Math.sin(t * 1.7) * 1.4;
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = 'rgba(249,115,22,.45)';
+            const outer = ctx.createRadialGradient(0, 8, 2, 0, 10, 34);
+            outer.addColorStop(0, 'rgba(255,246,180,.95)');
+            outer.addColorStop(.32, 'rgba(251,146,60,.88)');
+            outer.addColorStop(.72, 'rgba(239,68,68,.32)');
+            outer.addColorStop(1, 'rgba(239,68,68,0)');
+            ctx.fillStyle = outer;
+            ctx.beginPath();
+            ctx.ellipse(sway, 10, 16, 31 + Math.sin(t * 1.2) * 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(59,130,246,.85)';
+            ctx.beginPath();
+            ctx.ellipse(0, 28, 8, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff7c2';
+            ctx.beginPath();
+            ctx.moveTo(sway, -12);
+            ctx.bezierCurveTo(-7+sway, 2, -6+sway, 13, 0+sway, 23);
+            ctx.bezierCurveTo(8+sway, 11, 8+sway, 2, sway, -12);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawSunRays(ctx, x, y, alpha=0.65) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.globalCompositeOperation = 'screen';
+            
+            const g1 = ctx.createLinearGradient(480, -20, 220, 380);
+            g1.addColorStop(0, 'rgba(254, 240, 138, 0.40)');
+            g1.addColorStop(0.5, 'rgba(253, 224, 71, 0.18)');
+            g1.addColorStop(1, 'rgba(253, 224, 71, 0.0)');
+            
+            ctx.fillStyle = g1;
+            ctx.beginPath();
+            ctx.moveTo(380, -20);
+            ctx.lineTo(560, -20);
+            ctx.lineTo(360, 440);
+            ctx.lineTo(110, 440);
+            ctx.closePath();
+            ctx.fill();
+
+            const now = performance.now();
+            for (let i = 0; i < 18; i++) {
+                const px = 180 + ((i * 37 + now * 0.012) % 280);
+                const py = 40 + ((i * 23 + now * 0.018) % 320);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+                ctx.beginPath();
+                ctx.arc(px, py, 1 + (i % 2) * 0.8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        function drawTubeStand(ctx) {
+            ctx.save();
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(110, 395, 120, 10);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(115, 392, 110, 3);
+            
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(165, 75, 8, 320);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(167, 75, 2, 320);
+            
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(158, 175, 22, 18);
+            ctx.fillStyle = '#64748b';
+            ctx.fillRect(160, 182, 18, 4);
+            
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(180, 181, 40, 6);
+            
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.ellipse(280, 184, 62, 8, 0, 0, Math.PI);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(280, 184, 62, 8, 0, 0, Math.PI);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function getDetectionTool(data) {
+            const text = [data?.reagent,data?.reagentEn,data?.initialVisual,data?.initialVisualEn,data?.obsPhase1Ar,data?.obsPhase2Ar,data?.obsPhase3Ar,data?.obsPhase3En].filter(Boolean).join(' ').toLowerCase();
+            if (/limewater|ماء الجير|ca\(oh\)2/.test(text)) return {type:'limewater', icon:'🧪', ar:'ماء الجير الرائق', en:'Limewater', result:'يتعكر ماء الجير ويصبح أبيض لبنيًا'};
+            if (/lead acetate|lead\s*\(ii\)\s*acetate|أسيتات الرصاص|خلات الرصاص|pb\(ch3coo\)2/.test(text) && /paper|ورقة/.test(text)) return {type:'lead', icon:'📄', ar:'ورقة مبللة بأسيتات الرصاص II', en:'Lead(II) acetate paper', result:'تسود الورقة لتكوّن كبريتيد الرصاص الأسود (PbS)'};
+            if (/k₂cr₂o₇|k2cr2o7|ثنائي كرومات|دكرومات|dichromate/.test(text)) return {type:'dichromate', icon:'📄', ar:'ورقة ثنائي كرومات البوتاسيوم المحمضة', en:'Acidified potassium dichromate paper', result:'يتحول اللون البرتقالي إلى الأخضر'};
+            if (/kmno₄|kmno4|permanganate|برمنجنات|برمنغنات/.test(text) && /paper|ورقة|acidified/.test(text)) return {type:'permanganate', icon:'📄', ar:'ورقة/كاشف برمنجنات البوتاسيوم المحمضة', en:'Acidified potassium permanganate', result:'يزول اللون البنفسجي'};
+            if (/starch|النشا(?!در)/.test(text) && /br₂|br2|bromine|بروم(?!يد)/.test(text)) return {type:'starchBr', icon:'📄', ar:'ورقة نشا مبللة', en:'Moistened starch paper', result:'يتحول لون الورقة إلى الأصفر'};
+            if (/starch|النشا(?!در)/.test(text) && /i₂|i2|iodine|يود(?!يد)/.test(text)) return {type:'starchI', icon:'📄', ar:'ورقة نشا مبللة', en:'Moistened starch paper', result:'تتحول الورقة إلى الأزرق الداكن'};
+            if (/ammonia rod|nh₃ rod|saturated ammonia|ساق.*النشادر|ساق.*الأمونيا|ammonia-moistened/.test(text)) return {type:'ammonia', icon:'🪄', ar:'ساق زجاجية مبللة بمحلول النشادر', en:'Ammonia-moistened glass rod', result:'تظهر سحب بيضاء دقيقة من كلوريد الأمونيوم'};
+            return {type:'none', icon:'👁️', ar:'ملاحظة مباشرة', en:'Direct observation', result:data?.initialVisual || 'التغير المرئي في الأنبوبة'};
+        }
+
+        function getVisualPhenomenon(data) {
+            const text=[data?.reagent,data?.reagentEn,data?.initialVisual,data?.initialVisualEn,data?.obsPhase1Ar,data?.obsPhase2Ar,data?.obsPhase3Ar,data?.obsPhase3En,data?.equation].filter(Boolean).join(' ').toLowerCase();
+            const has=re=>re.test(text);
+            const gasPalette={
+                'CO₂':'rgba(220,235,245,ALPHA)',
+                'SO₂':'rgba(226,232,240,ALPHA)',
+                'H₂S':'rgba(226,232,240,ALPHA)',
+                'HCl':'rgba(226,232,240,ALPHA)',
+                'Br₂':'rgba(225,85,20,ALPHA)',
+                'I₂':'rgba(145,60,200,ALPHA)',
+                'NO₂':'rgba(165,48,28,ALPHA)'
+            };
+            let gas=null;
+            if (data?.gasName) {
+                const name=String(data.gasName);
+                gas={name, hue:data.gasColor || gasPalette[name] || 'rgba(226,232,240,ALPHA)', colored:/Br₂|I₂|NO₂/.test(name)};
+            } else if(has(/co₂|co2|ثاني أكسيد الكربون|carbon dioxide/) && has(/gas|غاز|effervescence|فوران|تصاعد|↑/)) gas={name:'CO₂',hue:gasPalette['CO₂'],colored:false};
+            else if(has(/so₂|so2|ثاني أكسيد الكبريت|sulfur dioxide/) && has(/gas|غاز|fumes|تصاعد|↑/)) gas={name:'SO₂',hue:gasPalette['SO₂'],colored:false};
+            else if(has(/h₂s|h2s|كبريتيد الهيدروجين|hydrogen sulfide/) && has(/gas|غاز|تصاعد|↑/)) gas={name:'H₂S',hue:gasPalette['H₂S'],colored:false};
+            else if(has(/hcl|كلوريد الهيدروجين|hydrogen chloride/) && has(/gas|غاز|تصاعد|↑/)) gas={name:'HCl',hue:gasPalette['HCl'],colored:false};
+            else if(has(/br₂|br2|bromine|البروم/) && has(/vapor|vapour|vapors|أبخرة|بخار|fumes|↑/)) gas={name:'Br₂',hue:gasPalette['Br₂'],colored:true};
+            else if(has(/i₂|i2|iodine/) && has(/vapor|vapour|vapors|أبخرة|بخار|fumes|↑/)) gas={name:'I₂',hue:gasPalette['I₂'],colored:true};
+            else if(has(/no₂|no2|nitrogen dioxide|ثاني أكسيد النيتروجين/) && has(/vapor|vapour|vapors|أبخرة|بخار|fumes|gas|غاز|↑/)) gas={name:'NO₂',hue:gasPalette['NO₂'],colored:true};
+            const effervescence=has(/effervescence|vigorous|فوران|فقاعات|bubbles|تصاعد غاز|gas evolved|gas release/);
+            const brownRing=has(/brown ring|الحلقة البنية/);
+            return {gas,effervescence,colored:has(/kmno₄|kmno4|permanganate|برمنجنات/),iodine:has(/i₂|i2|iodine|اليود/),bromine:has(/br₂|br2|bromine|بروم/),dichromate:has(/dichromate|k₂cr₂o₇|k2cr2o7|ثنائي كرومات/),feso4:has(/feso₄|feso4|ferrous sulfate|كبريتات الحديد/),brownRing};
+        }
+
+        function drawGasBubbles(ctx,p,phenomenon,gasColor){
+            if(!phenomenon?.gas || p<.03) return;
+            const now=performance.now();
+            const count=Math.floor(12+34*p);
+            ctx.save();
+            for(let i=0;i<count;i++){
+                const seed=i*23.17;
+                const baseX=236+(seed*7.13)%88;
+                const baseY=360-(seed*3.91)%55;
+                const travel=((now*(.022+(i%5)*.004)+seed*11)%150)*Math.min(1,p*1.4);
+                const x=baseX+Math.sin(now/650+seed)*2.8;
+                const y=baseY-travel;
+                const r=1.1+(i%4)*.55;
+                ctx.strokeStyle=(gasColor||'rgba(226,232,240,.55)').replace('ALPHA',String(Math.max(.18,.62-travel/300)));
+                ctx.lineWidth=1;
+                ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        /* Improved Continuous Gas Plume with NO -> NO2 Exponential Height Transition */
+        function drawGasPlume(ctx, p, phenomenon, mode='open'){
+            const gas = phenomenon?.gas;
+            if(!gas || p < 0.05) return;
+            const reveal = easeInOutCubic(Math.min(1, (p - 0.05) / 0.25));
+            const now = performance.now();
+            ctx.save();
+
+            const surfaceY = 245, mouthY = 92, cx = 280;
+            const rise = easeInOutCubic(Math.min(1, Math.max(0, (p - 0.05) / 0.60)));
+            const topY = surfaceY - (surfaceY - mouthY) * rise;
+
+            const isNO2TwoStage = (gas.name === 'NO₂' && (currentReactionDataForRender?.reagentEn?.includes('Dilute Hydrochloric Acid') || currentReactionDataForRender?.reagent?.includes('Dil')));
+
+            const totalNodes = 26;
+            for(let k = 0; k < totalNodes; k++){
+                const q = k / (totalNodes - 1); // 0 at liquid surface, 1 at mouth
+                const y = surfaceY - (surfaceY - topY) * q;
+                if(y < topY) continue;
+
+                const phase = now / 650 + k * 0.45;
+                const spread = 3 + 14 * q;
+                const x = cx + Math.sin(phase) * (spread * 0.4);
+                const w = 6 + 14 * q;
+                const h = 8 + 16 * q;
+
+                let nodeColor;
+                if (isNO2TwoStage) {
+                    // Exponential transition: NO inside remains transparent, turning into rich reddish-brown NO2 near mouth
+                    const oxidationT = Math.pow(q, 2.2); 
+                    const baseNO = 'rgba(230, 238, 245, 0.12)';
+                    const brownNO2 = 'rgba(165, 48, 28, 0.88)';
+                    nodeColor = lerpRgbaStr(baseNO, brownNO2, oxidationT);
+                } else {
+                    const alpha = (gas.colored ? 0.38 : 0.22) * reveal * (1 - 0.02 * k);
+                    nodeColor = gas.hue.replace('ALPHA', String(alpha.toFixed(3)));
+                }
+
+                const g = ctx.createRadialGradient(x, y, 1, x, y, w * 1.6);
+                g.addColorStop(0, nodeColor);
+                g.addColorStop(0.5, lerpRgbaStr(nodeColor, 'rgba(0,0,0,0)', 0.5));
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.ellipse(x, y, w, h, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Gas escaping at mouth
+            if(rise > 0.70){
+                const escape = easeInOutCubic((rise - 0.70) / 0.30);
+                for(let k = 0; k < 12; k++){
+                    const t = k / 11;
+                    const phase = now / 750 + k * 0.55;
+                    const x = cx + Math.sin(phase) * (4 + 18 * t);
+                    const y = mouthY - 6 - 55 * t * escape;
+                    
+                    let plumeColor;
+                    if (isNO2TwoStage) {
+                        plumeColor = `rgba(165, 48, 28, ${(0.80 * reveal * escape * (1 - t * 0.8)).toFixed(3)})`;
+                    } else {
+                        const alpha = (gas.colored ? 0.45 : 0.22) * reveal * escape * (1 - t);
+                        plumeColor = gas.hue.replace('ALPHA', String(alpha.toFixed(3)));
+                    }
+
+                    const g = ctx.createRadialGradient(x, y, 1, x, y, 8 + 14 * t);
+                    g.addColorStop(0, plumeColor);
+                    g.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.ellipse(x, y, 8 + 14 * t, 10 + 16 * t, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawDeliveryGas(ctx,p,gas){
+            if(!gas || p<.25) return;
+            const reveal=Math.min(1,(p-.25)/.3), now=performance.now();
+            ctx.save();
+            for(let i=0;i<22;i++){
+                const t=((now/850+i*.071)%1)*reveal;
+                let x,y;
+                if(t<.45){ const q=t/.45; x=280+120*q; y=94+2*Math.sin(q*Math.PI); }
+                else { const q=(t-.45)/.55; x=400; y=96+205*q; }
+                const r=1.2+(i%3)*.45;
+                ctx.fillStyle=gas.hue.replace('ALPHA',String(.20+.25*(1-t)));
+                ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        function drawPaperDeliveryTube(ctx,p,tool){
+            if(!tool || !['lead','dichromate','starchBr','starchI'].includes(tool.type) || p<.46) return;
+            const q=Math.min(1,(p-.46)/.22);
+            ctx.save();
+            ctx.globalAlpha=.25+.75*q;
+            ctx.strokeStyle='rgba(226,242,255,.82)'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.lineJoin='round';
+            ctx.beginPath();
+            ctx.moveTo(280,92);
+            ctx.lineTo(280,78);
+            ctx.lineTo(410,78);
+            ctx.lineTo(410,258);
+            ctx.stroke();
+            ctx.strokeStyle='rgba(255,255,255,.22)'; ctx.lineWidth=1.2;
+            ctx.beginPath();ctx.moveTo(280,88);ctx.lineTo(280,82);ctx.lineTo(406,82);ctx.lineTo(406,258);ctx.stroke();
+            
+            const gas=getVisualPhenomenon(currentReactionDataForRender||{}).gas;
+            if(gas && p>.52){
+                const now=performance.now();
+                for(let i=0;i<18;i++){
+                    const phase=((now/900+i*.073)%1);
+                    let x,y;
+                    if(phase<.48){ const t=phase/.48; x=282+128*t; y=78; }
+                    else { const t=(phase-.48)/.52; x=410; y=80+178*t; }
+                    const a=.24+.42*(1-phase)*q;
+                    ctx.fillStyle=gas.hue.replace('ALPHA',String(a));
+                    ctx.beginPath();ctx.arc(x,y,1.2+(i%3)*.45,0,Math.PI*2);ctx.fill();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawDetectionTool(ctx, tool, p) {
+            if (!tool || tool.type==='none' || p<0.46) return;
+            const reveal=Math.min((p-.46)/.20,1);
+            ctx.save();
+            ctx.globalAlpha=reveal;
+            if(tool.type==='limewater') {
+                ctx.fillStyle='rgba(7,16,28,.88)'; ctx.strokeStyle='rgba(125,211,252,.52)'; ctx.lineWidth=2;
+                ctx.beginPath(); ctx.roundRect(392,295,120,92,12); ctx.fill(); ctx.stroke();
+                ctx.fillStyle='rgba(186,230,253,.12)'; ctx.beginPath(); ctx.ellipse(452,319,47,8,0,0,Math.PI*2); ctx.fill();
+                ctx.fillStyle=p>.70?'rgba(241,245,249,.62)':'rgba(186,230,253,.10)'; ctx.fillRect(401,319,102,58);
+                if(p>.68){
+                    ctx.globalAlpha=.3 + .4*Math.min(1,(p-.68)/.25);
+                    for(let i=0;i<28;i++){ const x=408+(i*29)%88, y=327+(i*17)%42; ctx.fillStyle='rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(x,y,1+(i%3)*.45,0,Math.PI*2); ctx.fill(); }
+                }
+                ctx.fillStyle='#f8fafc'; ctx.font='800 12px Cairo'; ctx.textAlign='center'; ctx.fillText('ماء الجير الرائق',452,276);
+            } else if(tool.type==='lead' || tool.type==='dichromate' || tool.type==='starchBr' || tool.type==='starchI' || tool.type==='permanganate') {
+                const paperX=372,paperY=276;
+                ctx.save(); ctx.rotate(-.035);
+                ctx.shadowBlur=12; ctx.shadowColor='rgba(0,0,0,.32)'; ctx.fillStyle='#e8eef7'; ctx.fillRect(paperX,paperY,76,96); ctx.shadowBlur=0;
+                let color='#f8fafc', label='ورقة كشف';
+                if(tool.type==='lead') { color=p>.72?'#111827':'#f8fafc'; label='ورقة أسيتات الرصاص II'; }
+                if(tool.type==='dichromate') { color=p>.72?'#22c55e':'#f59e0b'; label='ورقة ثنائي كرومات'; }
+                if(tool.type==='starchBr') { color=p>.72?'#facc15':'#f8fafc'; label='ورقة نشا مبللة'; }
+                if(tool.type==='starchI') { color=p>.72?'#1d4ed8':'#f8fafc'; label='ورقة نشا مبللة'; }
+                if(tool.type==='permanganate') { color=p>.72?'#f8fafc':'#7e22ce'; label='برمنجنات محمضة'; }
+                ctx.fillStyle=color; ctx.globalAlpha=.95; ctx.fillRect(paperX+7,paperY+18,62,69);
+                ctx.globalAlpha=.72; ctx.fillStyle='rgba(15,23,42,.45)'; for(let i=0;i<5;i++){ctx.fillRect(paperX+11,paperY+24+i*12,20+(i%2)*15,1);}
+                ctx.globalAlpha=1; ctx.fillStyle='#f8fafc'; ctx.font='800 10px Cairo'; ctx.textAlign='center'; ctx.fillText(label,paperX+38,paperY-10);
+                ctx.restore();
+            } else if(tool.type==='ammonia') {
+                ctx.strokeStyle='rgba(226,242,255,.82)'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(440,282); ctx.lineTo(440,368); ctx.stroke();
+                ctx.strokeStyle='rgba(255,255,255,.32)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(438,286); ctx.lineTo(438,362); ctx.stroke();
+                ctx.fillStyle='rgba(125,211,252,.75)'; ctx.beginPath(); ctx.arc(440,280,6,0,Math.PI*2); ctx.fill();
+                if(p>.68){
+                    const q=Math.min(1,(p-.68)/.25); ctx.globalAlpha=.75*q;
+                    for(let i=0;i<12;i++){
+                        const ang=i*2.4 + performance.now()/1800;
+                        const rr=5 + ((i*7)%18)*q;
+                        const x=440+Math.cos(ang)*rr;
+                        const y=258+Math.sin(ang)*rr*.55;
+                        ctx.fillStyle='rgba(248,250,252,.75)'; ctx.beginPath(); ctx.arc(x,y,1.5+(i%3)*.8,0,Math.PI*2); ctx.fill();
+                    }
+                    ctx.globalAlpha=.18*q; const cg=ctx.createRadialGradient(440,258,2,440,258,34); cg.addColorStop(0,'rgba(255,255,255,.7)'); cg.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=cg; ctx.beginPath(); ctx.ellipse(440,258,40,25,0,0,Math.PI*2); ctx.fill();
+                }
+                ctx.globalAlpha=1; ctx.fillStyle='#f8fafc'; ctx.font='800 10px Cairo'; ctx.textAlign='center'; ctx.fillText('ساق زجاجية مبللة بالنشادر',440,400);
+            }
+            ctx.restore();
+        }
+
+        function getPrecipitateLabel(data) {
+            const text = [data?.initialVisual,data?.initialVisualEn,data?.obsPhase2Ar,data?.obsPhase2En,data?.obsPhase3Ar,data?.obsPhase3En,data?.equation].filter(Boolean).join(' ');
+            if (/(^|[\s+;])S\(s\)\s*[↓]|yellow sulfur|yellow colloid sulfur|كبريت.*أصفر|معلق أصفر من الكبريت|راسب أصفر من الكبريت/i.test(text)) {
+                return {formula:'S', label:'راسب أصفر: S'};
+            }
+            const m = text.match(/(Ag₂SO₃|Ag(?:2|₍₂₎)S(?!O)|Ag₂S(?!O)|AgCl|AgBr|AgI|Ag₃PO₄|Ba₃\(PO₄\)₂|BaSO₄|BaCO₃|BaSO₃|BaS|PbSO₄|CuS(?!O)|MgCO₃|CaCO₃|Fe\(OH\)₂|Fe\(OH\)₃|Al\(OH\)₃|CaSO₄)/i);
+            if (!m) return null;
+            const formula = m[0].replace(/Ag2S/i,'Ag₂S');
+            let color='راسب';
+            if (/أسود|black|سود/i.test(text)) color='راسب أسود';
+            else if (/أصفر|yellow/i.test(text)) color='راسب أصفر';
+            else if (/بني|brown/i.test(text)) color='راسب بني';
+            else if (/أبيض|white/i.test(text)) color='راسب أبيض';
+            else if (/أزرق|blue/i.test(text)) color='راسب أزرق';
+            if (formula === 'Ag₂SO₃' && /يسود بالتسخين|turns black on heating/i.test(text)) return {formula, label:`راسب أبيض يسود بالتسخين: ${formula}`};
+            return {formula, label:`${color}: ${formula}`};
+        }
+
+        function drawArrowLabel(ctx, fromX, fromY, toX, toY, text, color='#7dd3fc', align='left') {
+            ctx.save();
+            ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=1.8; ctx.globalAlpha=.92;
+            ctx.setLineDash([5,6]);
+            ctx.beginPath(); ctx.moveTo(fromX,fromY); ctx.lineTo(toX,toY); ctx.stroke(); ctx.setLineDash([]);
+            const ang=Math.atan2(toY-fromY,toX-fromX), ah=8;
+            ctx.beginPath(); ctx.moveTo(toX,toY); ctx.lineTo(toX-ah*Math.cos(ang-.55),toY-ah*Math.sin(ang-.55)); ctx.lineTo(toX-ah*Math.cos(ang+.55),toY-ah*Math.sin(ang+.55)); ctx.closePath(); ctx.fill();
+            ctx.font='800 13px Cairo'; ctx.textAlign=align; ctx.textBaseline='middle';
+            const metrics=ctx.measureText(text), padX=10, padY=7;
+            const tx=fromX, ty=fromY;
+            const boxW=metrics.width+padX*2, boxH=30;
+            const boxX=align==='left'?tx-padX:tx-metrics.width-padX, boxY=ty-boxH/2;
+            ctx.fillStyle='rgba(1,7,16,.94)'; ctx.strokeStyle='rgba(255,255,255,.16)'; ctx.lineWidth=1;
+            ctx.shadowBlur=12; ctx.shadowColor='rgba(0,0,0,.35)';
+            ctx.beginPath(); ctx.roundRect(boxX,boxY,boxW,boxH,9); ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+            ctx.fillStyle='#f8fafc'; ctx.fillText(text,tx,ty);
+            ctx.restore();
+        }
+
+        function drawPhenomenonCallouts(ctx, p, data, phenomenon) {
+            if (p < 0.18) return;
+
+            // 1. Gas Callout
+            const gas = phenomenon?.gas;
+            if (gas) {
+                const names = {
+                    'CO₂': 'ثاني أكسيد الكربون (CO₂)',
+                    'SO₂': 'ثاني أكسيد الكبريت (SO₂)',
+                    'H₂S': 'كبريتيد الهيدروجين (H₂S)',
+                    'HCl': 'كلوريد الهيدروجين (HCl)',
+                    'Br₂': 'أبخرة البروم (Br₂)',
+                    'I₂': 'أبخرة اليود (I₂)',
+                    'NO₂': 'أبخرة بني محمر (NO₂)'
+                };
+                const tool = getDetectionTool(data);
+                const delivery = tool?.type === 'limewater';
+                drawArrowLabel(ctx, 72, 130, delivery ? 392 : 280, delivery ? 120 : 200, names[gas.name] || gas.name, gas.colored ? '#f59e0b' : '#cbd5e1', 'left');
+            }
+
+            // 2. Precipitate Callout
+            const precip = getPrecipitateLabel(data);
+            if (precip && p > 0.25) {
+                const a = Math.min(1, (p - 0.25) / 0.22);
+                ctx.save();
+                ctx.globalAlpha = a;
+                drawArrowLabel(ctx, 82, 350, 280, 378, precip.label, '#fcd34d', 'left');
+                ctx.restore();
+            }
+
+            // 3. Brown Ring Callout
+            if (phenomenon?.brownRing && p > 0.20) {
+                const a = Math.min(1, (p - 0.20) / 0.22);
+                ctx.save();
+                ctx.globalAlpha = a;
+                drawArrowLabel(ctx, 72, 315, 280, 330, 'حلقة بنية: [Fe(H₂O)₅NO]SO₄', '#f59e0b', 'left');
+                ctx.restore();
+            }
+
+            // 4. Liquid Color Solution Callout
+            if (!gas && !precip && !phenomenon?.brownRing && p > 0.25) {
+                const text = [data?.initialVisual, data?.obsPhase2Ar, data?.obsPhase3Ar].filter(Boolean).join(' ');
+                if (text) {
+                    const a = Math.min(1, (p - 0.25) / 0.22);
+                    ctx.save();
+                    ctx.globalAlpha = a;
+                    let shortLabel = text.split('(')[0].trim();
+                    if (shortLabel.length > 32) shortLabel = shortLabel.substring(0, 32) + '...';
+                    drawArrowLabel(ctx, 72, 290, 280, 290, shortLabel, '#38bdf8', 'left');
+                    ctx.restore();
+                }
+            }
+        }
+
+        let currentReactionDataForRender=null;
+        function getSampleState(data){
+            if(data?.sampleState) return data.sampleState;
+            const reactants=String(data?.equation||'').split(/→|->/)[0];
+            const t=[reactants,data?.obsPhase1Ar,data?.obsPhase1En,data?.reagent,data?.reagentEn].filter(Boolean).join(' ').toLowerCase();
+            if(/ملح صلب|solid salt|solid sample|salt \(s\)|\(s\)/.test(t)) return 'solid';
+            return 'solution';
+        }
+
+        function getAdditionMode(data){
+            if(data?.additionMode) return data.additionMode;
+            const t=[data?.obsPhase1Ar,data?.obsPhase1En,data?.reagent,data?.reagentEn].filter(Boolean).join(' ').toLowerCase();
+            if(/solid salt|ملح صلب|conc\. h₂so₄|conc h₂so₄|concentrated sulfuric/.test(t)) return 'reagent_to_solid';
+            return 'dropwise';
+        }
+
+        function drawTubeState(p,rxn){
+            const canvas=document.getElementById('tubeCanvas');if(!canvas||!rxn)return;
+            currentReactionDataForRender=rxn.data||{};
+            const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+            const data=rxn.data||{};
+            const sampleState=getSampleState(data);
+            const additionMode=getAdditionMode(data);
+            const text=[data.reagent,data.reagentEn,data.initialVisual,data.initialVisualEn,data.obsPhase1Ar,data.obsPhase2Ar,data.obsPhase3Ar,data.obsPhase3En].filter(Boolean).join(' ').toLowerCase();
+            const needsHeat=stepNeedsHeat(text);
+            const needsLight=/light|الضوء|ضوء|exposed to light/.test(text);
+            const flame=/flame test|dry flame|لهب بنزن|اختبار اللهب/.test(text);
+            
+            const additionEnd = 0.16;
+            const heatStart = 0.22;
+            const reactionP = needsHeat
+                ? Math.max(0, Math.min(1, (p-heatStart)/(1-heatStart)))
+                : Math.max(0, Math.min(1, (p-additionEnd)/ (1-additionEnd)));
+            const phenomenon=getVisualPhenomenon(data);
+            const tool=getDetectionTool(data);
+            const delivery=tool.type==='limewater';
+            const paperDelivery=['lead','dichromate','starchBr','starchI'].includes(tool.type);
+            const X=220,Y=92,W=120,H=300,S=245,B=392;
+
+            const bg=ctx.createLinearGradient(0,0,0,470);
+            bg.addColorStop(0,'#13263a');
+            bg.addColorStop(.72,'#0a1524');
+            bg.addColorStop(1,'#07101a');
+            ctx.fillStyle=bg;
+            ctx.fillRect(0,0,560,470);
+            
+            ctx.fillStyle='rgba(255,255,255,.025)';
+            for(let x=0;x<560;x+=48) ctx.fillRect(x,0,1,470);
+            
+            ctx.fillStyle='#111d2a';
+            ctx.fillRect(0,395,560,75);
+            ctx.fillStyle='rgba(255,255,255,.12)';
+            ctx.fillRect(0,395,560,3);
+
+            drawTubeStand(ctx);
+            
+            ctx.save();
+            ctx.fillStyle='rgba(3,10,20,.85)';
+            ctx.strokeStyle='rgba(125,211,252,.30)';
+            ctx.lineWidth=1;
+            ctx.beginPath();
+            ctx.roundRect(18,16,128,28,8);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle='#cbd5e1';
+            ctx.font='800 10px Cairo';
+            ctx.textAlign='center';
+            ctx.fillText(sampleState==='solid'?'العينة: ملح صلب':'العينة: محلول',82,34);
+            ctx.restore();
+            
+            if(needsLight) drawSunRays(ctx,330,25,.65);
+
+            ctx.save();
+            ctx.shadowBlur=22;
+            ctx.shadowColor='rgba(0,0,0,.75)';
+            ctx.fillStyle='rgba(0,0,0,.42)';
+            ctx.beginPath();
+            ctx.ellipse(280, 396, 60, 8, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(X+5,S);
+            ctx.lineTo(X+5,B-32);
+            ctx.quadraticCurveTo(X+5,B,X+60,B);
+            ctx.quadraticCurveTo(X+115,B,X+115,B-32);
+            ctx.lineTo(X+115,S);
+            ctx.closePath();
+            const base=ctx.createLinearGradient(0,S,0,B);
+            base.addColorStop(0,'rgba(125,211,252,.14)');
+            base.addColorStop(.55,'rgba(56,189,248,.08)');
+            base.addColorStop(1,'rgba(15,23,42,.34)');
+            ctx.fillStyle=base;
+            ctx.fill();
+            
+            /* Render Liquid Color Smoothly */
+            const lc=getLiquidAppearance(data,reactionP);
+            if(lc){
+                const tint=ctx.createLinearGradient(0,S,0,B);
+                tint.addColorStop(0,lc);
+                tint.addColorStop(.5,lc);
+                tint.addColorStop(1,lc);
+                ctx.fillStyle=tint;
+                ctx.fill();
+            }
+            
+            ctx.strokeStyle='rgba(125,211,252,.35)';
+            ctx.lineWidth=1.8;
+            ctx.beginPath();
+            ctx.ellipse(280,S,55,6,0,0,Math.PI*2);
+            ctx.stroke();
+            ctx.restore();
+
+            if(sampleState==='solid'){
+                const dissolve=Math.max(0,Math.min(1,(reactionP-.05)/.32));
+                const alpha=1-(dissolve*dissolve*(3-2*dissolve));
+                if(alpha>0.01){
+                    ctx.save();
+                    ctx.globalAlpha=alpha;
+                    ctx.fillStyle='rgba(238,242,246,.90)';
+                    ctx.beginPath();ctx.ellipse(280,B-11,34,6,0,0,Math.PI*2);ctx.fill();
+                    for(let i=0;i<24;i++){
+                        const x=248+(i*19)%64, y=B-20-(i%5)*2.4;
+                        ctx.fillStyle=i%3===0?'rgba(255,255,255,.95)':'rgba(210,220,230,.88)';
+                        ctx.fillRect(x,y,2+(i%3),2+(i%2));
+                    }
+                    ctx.fillStyle='#e2e8f0';ctx.font='800 10px Cairo';ctx.textAlign='center';ctx.fillText('عينة ملح صلب',280,B-29);
+                    ctx.restore();
+                }
+            }
+
+            if(additionMode!=='solid_direct'){
+                ctx.save();
+                ctx.strokeStyle='rgba(226,242,255,.85)';
+                ctx.lineWidth=3;
+                ctx.beginPath();
+                ctx.moveTo(280,20);
+                ctx.lineTo(280,58);
+                ctx.stroke();
+                
+                ctx.fillStyle='rgba(226,242,255,.85)';
+                ctx.beginPath();
+                ctx.ellipse(280,16,20,9,0,0,Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle='#cbd5e1'; ctx.fillRect(276,52,8,32);
+                ctx.fillStyle='#1e293b'; ctx.fillRect(273,48,14,6);
+                
+                if(p < additionEnd){
+                    const q = Math.min(1, p / additionEnd);
+                    const gravityAccel = q * q;
+                    const dy = 88 + gravityAccel * (S - 88 - 6);
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.shadowBlur = 10; ctx.shadowColor = '#38bdf8';
+                    ctx.beginPath();
+                    ctx.ellipse(280, dy, 3.5, 7, 0, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            if(delivery){
+                ctx.save();ctx.strokeStyle='rgba(226,242,255,.82)';ctx.lineWidth=5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(280,92);ctx.lineTo(280,92);ctx.bezierCurveTo(330,92,350,92,400,92);ctx.lineTo(400,295);ctx.stroke();ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(280,88);ctx.bezierCurveTo(330,88,350,88,396,88);ctx.stroke();ctx.restore();
+                drawDeliveryGas(ctx,p,phenomenon.gas);
+            } else if(paperDelivery){
+                drawPaperDeliveryTube(ctx,reactionP,tool);
+            }
+
+            if(phenomenon.effervescence)drawGasBubbles(ctx,reactionP,phenomenon,phenomenon.gas?.hue||'rgba(226,232,240,.55)');
+
+            /* Precipitate Rendering with Interpolated Color Transitions */
+            const precip=getPrecipitateLabel(data);
+            if(precip){
+                let precipColor = precip.formula==='S' ? 'rgba(234,179,8,.96)' : ((data.bottomColor && data.bottomColor!=='transparent') ? data.bottomColor : 'rgba(245,245,245,.95)');
+                
+                // Ag2SO3 turns black on heating
+                if (precip.formula==='Ag₂SO₃' && /يسود بالتسخين|turns black on heating|darken.*heat/i.test(text)) {
+                    const q = easeInOutCubic(Math.max(0, Math.min(1, (reactionP - 0.35) / 0.50)));
+                    precipColor = lerpRgbaStr('rgba(248, 250, 252, 0.95)', 'rgba(26, 26, 26, 0.98)', q);
+                }
+                // AgCl turns violet in light
+                if (precip.formula==='AgCl' && needsLight) {
+                    const q = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.25) / 0.55)));
+                    precipColor = lerpRgbaStr('rgba(248, 250, 252, 0.98)', 'rgba(139, 92, 246, 0.95)', q);
+                }
+                // AgBr darkens in light
+                if (precip.formula==='AgBr' && needsLight) {
+                    const q = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.25) / 0.55)));
+                    precipColor = lerpRgbaStr('rgba(254, 240, 138, 0.95)', 'rgba(113, 113, 122, 0.95)', q);
+                }
+
+                const reveal=Math.max(0,Math.min(1,(reactionP-.08)/.55));
+                ctx.save();
+                const settle=Math.max(0,Math.min(1,(reactionP-.22)/.50));
+                for(let i=0;i<58;i++){
+                    const seed=i*19.37;
+                    const x=238+(seed*3.71)%84;
+                    const startY=268+(seed*2.9)%72;
+                    const finalY=365+(seed*1.7)%20;
+                    const y=startY+(finalY-startY)*settle;
+                    const r=1.0+(i%4)*.62;
+                    ctx.globalAlpha=(.18+.68*reveal)*(0.55+.45*((i%5)/4));
+                    ctx.fillStyle=precipColor;
+                    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+                }
+                if(settle>.42){
+                    ctx.globalAlpha=.82*reveal;
+                    ctx.fillStyle=precipColor;
+                    ctx.beginPath();
+                    ctx.moveTo(X+10,379);
+                    ctx.quadraticCurveTo(X+34,370,X+60,376);
+                    ctx.quadraticCurveTo(X+87,370,X+110,379);
+                    ctx.lineTo(X+110,388);
+                    ctx.quadraticCurveTo(280,393,X+10,388);
+                    ctx.closePath();ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            drawGasPlume(ctx,reactionP,phenomenon,(delivery||paperDelivery)?'delivery':'open');
+
+            if(phenomenon.brownRing){
+                const topY=255,bottomY=350,interfaceY=330;ctx.save();
+                ctx.fillStyle='rgba(74,222,128,.55)';ctx.fillRect(X+8,topY,W-16,interfaceY-topY);
+                ctx.fillStyle='rgba(30,30,30,.48)';ctx.fillRect(X+8,interfaceY,W-16,bottomY-interfaceY);
+                const q=Math.max(0,Math.min(1,(reactionP-.35)/.35));ctx.globalAlpha=q;ctx.fillStyle='#8b4513';ctx.shadowBlur=10;ctx.shadowColor='#92400e';ctx.fillRect(X+8,interfaceY-3,W-16,6);ctx.restore();
+            }
+
+            if(delivery){
+                ctx.save();ctx.fillStyle='rgba(7,16,28,.88)';ctx.strokeStyle='rgba(125,211,252,.52)';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(392,295,120,92,12);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(186,230,253,.12)';ctx.fillRect(401,319,102,58);if(reactionP>.68){ctx.fillStyle='rgba(241,245,249,.58)';ctx.fillRect(401,319,102,58);for(let i=0;i<28;i++){const x=408+(i*29)%88,y=327+(i*17)%42;ctx.fillStyle='rgba(255,255,255,.75)';ctx.beginPath();ctx.arc(x,y,1+(i%3)*.45,0,Math.PI*2);ctx.fill();}}ctx.fillStyle='#f8fafc';ctx.font='800 12px Cairo';ctx.textAlign='center';ctx.fillText('ماء الجير الرائق',452,276);ctx.restore();
+            }else{
+                drawDetectionTool(ctx,tool,reactionP);
+            }
+
+            if((needsHeat||flame) && p>heatStart){
+                const heatReveal=Math.min(1,(p-heatStart)/0.14);
+                ctx.save();ctx.globalAlpha=heatReveal;
+                ctx.fillStyle='#263746';ctx.fillRect(195,395,170,8);
+                ctx.fillStyle='#0f1720';ctx.fillRect(265,403,30,11);
+                ctx.strokeStyle='#52677b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(250,404);ctx.lineTo(310,404);ctx.stroke();
+                drawFlame(ctx,280,418,.52);
+                ctx.restore();
+            }
+
+            ctx.save();
+            ctx.shadowBlur=18;
+            ctx.shadowColor='rgba(103,232,249,.10)';
+            const glass=ctx.createLinearGradient(X,Y,X+W,Y);
+            glass.addColorStop(0,'rgba(255,255,255,.025)');
+            glass.addColorStop(.18,'rgba(255,255,255,.18)');
+            glass.addColorStop(.5,'rgba(255,255,255,.02)');
+            glass.addColorStop(.82,'rgba(255,255,255,.11)');
+            glass.addColorStop(1,'rgba(255,255,255,.02)');
+            
+            ctx.fillStyle=glass;
+            ctx.strokeStyle='rgba(226,242,255,.62)';
+            ctx.lineWidth=3;
+            ctx.beginPath();
+            ctx.moveTo(X,Y);
+            ctx.lineTo(X,Y+H-32);
+            ctx.quadraticCurveTo(X,Y+H,X+60,Y+H);
+            ctx.quadraticCurveTo(X+W,Y+H,X+W,Y+H-32);
+            ctx.lineTo(X+W,Y);
+            ctx.stroke();
+            ctx.fill();
+            
+            ctx.strokeStyle = 'rgba(255,255,255,.75)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.ellipse(280, Y, 60, 6, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle='rgba(255,255,255,.32)';
+            ctx.lineWidth=2;
+            ctx.beginPath();
+            ctx.moveTo(X+13,Y+18);
+            ctx.lineTo(X+13,Y+H-42);
+            ctx.stroke();
+            ctx.restore();
+
+            drawPhenomenonCallouts(ctx,reactionP,data,phenomenon);
+        }
+
+        let explorerFilter = 'all';
+        let expandedExplorerIon = null;
+
+        function filterExplorer(filterKey, btn) {
+            explorerFilter = filterKey;
+            expandedExplorerIon = null;
+            document.querySelectorAll('.exp-filter-btn').forEach(b => {
+                b.className = "exp-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-xl";
+            });
+            if (btn) btn.className = "exp-filter-btn active bg-sky-600 text-white px-3 py-1.5 rounded-xl";
+            else {
+                const active = [...document.querySelectorAll('.exp-filter-btn')].find(b => (b.getAttribute('onclick')||'').includes("'"+filterKey+"'"));
+                if (active) active.className = "exp-filter-btn active bg-sky-600 text-white px-3 py-1.5 rounded-xl";
+            }
+            renderExplorerCards();
+        }
+
+        function escapeExplorerHTML(value) {
+            return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[ch]));
+        }
+
+        function getExplorerItems() {
+            const groups = [['anions','hcl'],['anions','h2so4'],['anions','bacl2'],['cations','group']];
+            return groups
+                .filter(([category, group]) => explorerFilter === 'all' || (explorerFilter === 'cations' && category === 'cations') || explorerFilter === group)
+                .flatMap(([category, group]) => (REACTION_DATA[category]?.[group] || []).map(item => ({item, category, group})));
+        }
+
+        function toggleExplorerDetails(key) {
+            expandedExplorerIon = expandedExplorerIon === key ? null : key;
+            renderExplorerCards();
+            requestAnimationFrame(() => {
+                const target = document.getElementById('explorer-card-' + key);
+                if (target && expandedExplorerIon === key) target.scrollIntoView({behavior:'smooth', block:'nearest'});
+            });
+        }
+
+        function openIonInLab(category, group, ionId, testType='main') {
+            setCategory(category);
+            const groupSelect = document.getElementById('simGroupSelect');
+            if (!groupSelect) return;
+            groupSelect.value = group;
+            populateSimIons();
+            const ionSelect = document.getElementById('simIonSelect');
+            if (ionSelect) {
+                ionSelect.value = ionId;
+                updateSimSelection();
+            }
+            if (typeof setTestType === 'function') setTestType(testType);
+            switchTab('simTab');
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        function copyExplorerEquation(button, text) {
+            const finish = () => { const original=button.textContent; button.textContent='تم النسخ'; setTimeout(()=>button.textContent=original,1100); };
+            const fallback = () => {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+                    document.body.appendChild(ta); ta.select();
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) finish();
+                } catch (e) {}
+            };
+            if (navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(finish).catch(fallback);
+            else fallback();
+        }
+
+        function renderExplorerCards() {
+            const grid = document.getElementById('explorerGrid');
+            const search = document.getElementById('explorerSearch');
+            if (!grid) return;
+            const query = (search?.value || '').trim().toLowerCase();
+            grid.innerHTML = '';
+            const items = getExplorerItems().filter(({item}) => [item.nameAr,item.nameEn,item.formula,item.id].some(v => String(v||'').toLowerCase().includes(query)));
+            const count = document.getElementById('explorerCount');
+            if (count) count.textContent = `${items.length} عنصر`;
+            if (!items.length) {
+                grid.innerHTML = '<div class="explorer-empty col-span-full p-8 rounded-2xl border border-slate-800 text-center text-slate-400">لا توجد أيونات مطابقة للبحث.</div>';
+                return;
+            }
+            items.forEach(({item,category,group}, index) => {
+                const key = `${category}-${group}-${item.id}`.replace(/[^a-zA-Z0-9_-]/g,'_');
+                const expanded = expandedExplorerIon === key;
+                const mainEq = item.main?.equation || 'لا توجد معادلة مسجلة لهذه التجربة.';
+                const confEq = item.conf?.equation || 'لا توجد معادلة مسجلة للتجربة التأكيدية.';
+                const card = document.createElement('article');
+                card.id = 'explorer-card-' + key;
+                card.className = 'explorer-card glass-card p-4 rounded-2xl border border-slate-800 space-y-3 transition';
+                card.innerHTML = `
+                    <button type="button" class="w-full text-right" onclick="toggleExplorerDetails('${key}')" aria-expanded="${expanded}">
+                        <div class="flex items-start gap-3 border-b border-slate-800 pb-3">
+                            <span class="explorer-index">${String(index+1).padStart(2,'0')}</span>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-black text-sky-400 text-base">${escapeExplorerHTML(item.nameAr)}</span>
+                                    <span class="formula-pill">${escapeExplorerHTML(item.formula)}</span>
+                                </div>
+                                <div class="text-xs text-slate-400 mt-1">${escapeExplorerHTML(item.nameEn)}</div>
+                            </div>
+                            <span class="text-slate-500 text-lg">${expanded ? '⌃' : '⌄'}</span>
+                        </div>
+                    </button>
+                    <div class="observation-mini text-xs text-slate-300">
+                        <span class="text-emerald-400 font-black">التجربة الأساسية:</span> ${escapeExplorerHTML(item.main?.obsPhase2Ar || item.main?.initialVisual || '—')}
+                    </div>
+                    <div class="observation-mini text-xs text-slate-300">
+                        <span class="text-indigo-400 font-black">التجربة التأكيدية:</span> ${escapeExplorerHTML(item.conf?.obsPhase2Ar || item.conf?.initialVisual || '—')}
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button type="button" class="explorer-action secondary" onclick="toggleExplorerDetails('${key}')">📚 المعادلات والتفاصيل</button>
+                        <button type="button" class="explorer-action primary" onclick="openIonInLab('${category}','${group}','${item.id}','main')">🔬 فتح في المعمل</button>
+                    </div>
+                    ${expanded ? `
+                    <div class="explorer-details space-y-3 pt-2 border-t border-slate-800">
+                        <div class="equation-panel">
+                            <div class="flex items-center justify-between gap-2"><span class="detail-label emerald">المعادلة الأساسية</span><button type="button" class="copy-eq" onclick="copyExplorerEquation(this, decodeURIComponent('${encodeURIComponent(mainEq)}'))">نسخ</button></div>
+                            <div class="equation-text">${escapeExplorerHTML(mainEq)}</div>
+                            <div class="text-[11px] text-slate-400 mt-2">الكاشف: ${escapeExplorerHTML(item.main?.reagent || '—')}</div>
+                        </div>
+                        <div class="equation-panel">
+                            <div class="flex items-center justify-between gap-2"><span class="detail-label indigo">المعادلة التأكيدية</span><button type="button" class="copy-eq" onclick="copyExplorerEquation(this, decodeURIComponent('${encodeURIComponent(confEq)}'))">نسخ</button></div>
+                            <div class="equation-text">${escapeExplorerHTML(confEq)}</div>
+                            <div class="text-[11px] text-slate-400 mt-2">الكاشف: ${escapeExplorerHTML(item.conf?.reagent || '—')}</div>
+                        </div>
+                        <div class="detail-grid">
+                            <div><span>الملاحظة</span><strong>${escapeExplorerHTML(item.main?.obsPhase3Ar || item.main?.obsPhase2Ar || '—')}</strong></div>
+                            <div><span>الاختبار التأكيدي</span><strong>${escapeExplorerHTML(item.conf?.obsPhase3Ar || item.conf?.obsPhase2Ar || '—')}</strong></div>
+                        </div>
+                        <button type="button" class="explorer-action primary w-full" onclick="openIonInLab('${category}','${group}','${item.id}','conf')">✨ فتح التجربة التأكيدية في المعمل</button>
+                    </div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        const CALC_CATIONS = {
+            'Ag+':  {sym:'Ag', z:1, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'},
+            'Pb2+': {sym:'Pb', z:2, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'},
+            'Ba2+': {sym:'Ba', z:2, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'},
+            'Ca2+': {sym:'Ca', z:2, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'},
+            'Cu2+': {sym:'Cu', z:2, solAr:'محلول أزرق', solEn:'Blue Solution'},
+            'Fe2+': {sym:'Fe', z:2, solAr:'محلول أخضر باهت', solEn:'Pale Green Solution'},
+            'Fe3+': {sym:'Fe', z:3, solAr:'محلول أصفر مائل للبني', solEn:'Yellow-Brown Solution'},
+            'Al3+': {sym:'Al', z:3, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'},
+            'Na+':  {sym:'Na', z:1, solAr:'محلول شفاف عديم اللون', solEn:'Clear Colorless Solution'}
+        };
+        const CALC_ANIONS = {
+            'Cl-':    {f:'Cl',  z:1, poly:false},
+            'Br-':    {f:'Br',  z:1, poly:false},
+            'I-':     {f:'I',   z:1, poly:false},
+            'S2-':    {f:'S',   z:2, poly:false},
+            'SO3 2-': {f:'SO₃', z:2, poly:true},
+            'SO4 2-': {f:'SO₄', z:2, poly:true},
+            'PO4 3-': {f:'PO₄', z:3, poly:true},
+            'CO3 2-': {f:'CO₃', z:2, poly:true},
+            'OH-':    {f:'OH',  z:1, poly:true}
+        };
+        
+        const CALC_RULES = {
+            'Ag+|Cl-':    [1,'راسب أبيض يتحول بنفسجيًا بالضوء ويذوب في النشادر','White ppt (turns violet in light, soluble in NH₃)'],
+            'Ag+|Br-':    [1,'راسب أصفر باهت يغمق بالضوء ويذوب ببطء في النشادر','Pale yellow ppt (darkens in light, slowly soluble in NH₃)'],
+            'Ag+|I-':     [1,'راسب أصفر لا يذوب في النشادر','Yellow ppt (insoluble in NH₃)'],
+            'Ag+|S2-':    [1,'راسب أسود مباشر','Black precipitate'],
+            'Ag+|SO3 2-': [1,'راسب أبيض يسود بالتسخين','White ppt turning black on heating'],
+            'Ag+|PO4 3-': [1,'راسب أصفر يذوب في النشادر وحمض النيتريك','Yellow ppt (soluble in NH₃ and HNO₃)'],
+            'Ag+|CO3 2-': [1,'راسب أبيض مصفر','Pale yellowish-white precipitate'],
+            'Ag+|OH-':    [1,'راسب بني (Ag₂O)','Brown ppt (Ag₂O)','Ag₂O'],
+            'Pb2+|Cl-':   [1,'راسب أبيض يذوب في الماء الساخن','White ppt (dissolves in hot water)'],
+            'Pb2+|Br-':   [1,'راسب أبيض يذوب في الماء الساخن','White ppt (dissolves in hot water)'],
+            'Pb2+|I-':    [1,'راسب أصفر زاهٍ يذوب في الماء الساخن','Bright yellow ppt (dissolves in hot water)'],
+            'Pb2+|S2-':   [1,'راسب أسود','Black precipitate'],
+            'Pb2+|SO3 2-':[1,'راسب أبيض','White precipitate'],
+            'Pb2+|SO4 2-':[1,'راسب أبيض','White precipitate'],
+            'Pb2+|PO4 3-':[1,'راسب أبيض','White precipitate'],
+            'Pb2+|CO3 2-':[1,'راسب أبيض','White precipitate'],
+            'Pb2+|OH-':   [1,'راسب أبيض يذوب في زيادة NaOH','White ppt (soluble in excess NaOH)'],
+            'Ba2+|SO3 2-':[1,'راسب أبيض يذوب في HCl المخفف','White ppt (Soluble in dilute HCl)'],
+            'Ba2+|SO4 2-':[1,'راسب أبيض لا يذوب في HCl','White ppt (Insoluble in HCl)'],
+            'Ba2+|PO4 3-':[1,'راسب أبيض يذوب في HCl','White ppt (Soluble in dilute HCl)'],
+            'Ba2+|CO3 2-':[1,'راسب أبيض يذوب في HCl المخفف','White ppt (Soluble in dilute HCl)'],
+            'Ca2+|SO3 2-':[1,'راسب أبيض','White precipitate'],
+            'Ca2+|SO4 2-':[1,'راسب أبيض قليل الذوبان','White ppt (sparingly soluble)'],
+            'Ca2+|PO4 3-':[1,'راسب أبيض','White precipitate'],
+            'Ca2+|CO3 2-':[1,'راسب أبيض يذوب في HCl والماء المحمل بـ CO₂','White ppt (soluble in HCl and CO₂-water)'],
+            'Ca2+|OH-':   [0,'محلول رائق (Ca(OH)₂ قليل الذوبان - ماء الجير)','Clear solution (Ca(OH)₂ sparingly soluble - limewater)'],
+            'Ca2+|S2-':   [0,'محلول عديم اللون (يتحلل مائيًا)','Colorless solution (hydrolyzes)'],
+            'Cu2+|Cl-':   [0,'محلول أزرق مخضر','Blue-green Solution'],
+            'Cu2+|Br-':   [0,'محلول أخضر مزرق','Green-blue Solution'],
+            'Cu2+|I-':    [1,'راسب أبيض من CuI في محلول بني (يتحرر I₂)','White CuI ppt in brown solution (I₂ liberated)','CuI'],
+            'Cu2+|S2-':   [1,'راسب أسود يذوب في HNO₃ الساخن','Black ppt (dissolves in hot HNO₃)'],
+            'Cu2+|SO3 2-':[1,'راسب أخضر','Green precipitate'],
+            'Cu2+|PO4 3-':[1,'راسب أزرق باهت','Pale blue precipitate'],
+            'Cu2+|CO3 2-':[1,'راسب أزرق مخضر (كربونات النحاس القاعدية)','Blue-green ppt (basic copper carbonate)','CuCO₃·Cu(OH)₂'],
+            'Cu2+|OH-':   [1,'راسب أزرق جيلاتيني يسود بالتسخين','Pale blue gelatinous ppt (turns black on heating)'],
+            'Fe2+|S2-':   [1,'راسب أسود','Black precipitate'],
+            'Fe2+|SO3 2-':[1,'راسب أبيض مخضر','Greenish-white precipitate'],
+            'Fe2+|PO4 3-':[1,'راسب أبيض مخضر','Greenish-white precipitate'],
+            'Fe2+|CO3 2-':[1,'راسب أبيض مخضر','Greenish-white precipitate'],
+            'Fe2+|OH-':   [1,'راسب أبيض مخضر','Greenish White Precipitate'],
+            'Fe3+|I-':    [0,'محلول بني (يتأكسد I⁻ إلى I₂)','Brown solution (I⁻ oxidized to I₂)','FeI₂ + I₂'],
+            'Fe3+|S2-':   [1,'راسب أسود','Black precipitate'],
+            'Fe3+|SO3 2-':[0,'محلول أخضر باهت (يُختزل Fe³⁺ إلى Fe²⁺)','Pale green solution (Fe³⁺ reduced to Fe²⁺)','FeSO₄'],
+            'Fe3+|PO4 3-':[1,'راسب أصفر باهت','Pale yellow precipitate'],
+            'Fe3+|CO3 2-':[1,'راسب بني محمر Fe(OH)₃ مع تصاعد CO₂','Reddish-brown Fe(OH)₃ ppt with CO₂ evolution','Fe(OH)₃'],
+            'Fe3+|OH-':   [1,'راسب بني محمر جيلاتيني','Reddish-Brown Gelatinous ppt'],
+            'Al3+|S2-':   [1,'راسب أبيض جيلاتيني من Al(OH)₃ مع غاز H₂S','White gelatinous Al(OH)₃ ppt with H₂S gas','Al(OH)₃'],
+            'Al3+|SO3 2-':[1,'راسب أبيض جيلاتيني من Al(OH)₃','White gelatinous Al(OH)₃ ppt','Al(OH)₃'],
+            'Al3+|PO4 3-':[1,'راسب أبيض','White precipitate'],
+            'Al3+|CO3 2-':[1,'راسب أبيض جيلاتيني Al(OH)₃ مع تصاعد CO₂','White gelatinous Al(OH)₃ with CO₂ evolution','Al(OH)₃'],
+            'Al3+|OH-':   [1,'راسب أبيض جيلاتيني يذوب في الزيادة من NaOH','White Gelatinous ppt (Soluble in excess NaOH)']
+        };
+
+        function calcSubscript(n) {
+            return n === 1 ? '' : String(n).replace(/\d/g, d => '₀₁₂₃₄₅₆₇₈₉'[d]);
+        }
+        function calcGcd(a, b) { return b ? calcGcd(b, a % b) : a; }
+        function buildCalcFormula(cat, an) {
+            const g = calcGcd(cat.z, an.z);
+            const nCat = an.z / g, nAn = cat.z / g;
+            const catPart = cat.sym + calcSubscript(nCat);
+            const anPart = (an.poly && nAn > 1) ? '(' + an.f + ')' + calcSubscript(nAn) : an.f + calcSubscript(nAn);
+            return catPart + anPart;
+        }
+
+        function updateCalcPrediction() {
+            const cationKey = document.getElementById('calcCation').value;
+            const anionKey = document.getElementById('calcAnion').value;
+            const box = document.getElementById('calcResultBox');
+            const cat = CALC_CATIONS[cationKey];
+            const an = CALC_ANIONS[anionKey];
+            if (!cat || !an) return;
+
+            const rule = CALC_RULES[cationKey + '|' + anionKey];
+            let isSoluble, colorAr, colorEn, formula;
+            if (rule) {
+                isSoluble = !rule[0];
+                colorAr = rule[1];
+                colorEn = rule[2];
+                formula = rule[3] || buildCalcFormula(cat, an);
+            } else {
+                isSoluble = true;
+                colorAr = cat.solAr;
+                colorEn = cat.solEn;
+                formula = buildCalcFormula(cat, an);
+            }
+
+            box.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-xs font-bold text-slate-400">الصيغة التقديرية (Estimated Formula):</span>
+                    <span class="text-base font-bold text-yellow-300 font-mono">${formula}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div><span class="text-slate-400">حالة الذوبان (Solubility):</span> <span class="${isSoluble ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}">${isSoluble ? 'ذائب في الماء (Aqueous)' : 'راسب صلب (Precipitate)'}</span></div>
+                    <div><span class="text-slate-400">اللون بالعربية:</span> <span class="text-slate-100 font-bold">${colorAr}</span></div>
+                    <div class="col-span-2"><span class="text-slate-400">English Color Description:</span> <span class="text-sky-300 font-mono font-bold">${colorEn}</span></div>
+                </div>
+            `;
+        }
+
+        const SOLUBILITY_DATA = [
+            {formula:'NaCl',name:'كلوريد الصوديوم',state:'ذائب في الماء',en:'Soluble',ions:'Na⁺(aq) + Cl⁻(aq)',obs:'تختفي بلورات الملح تدريجيًا ويتكون محلول متجانس شفاف.',rule:'أملاح الصوديوم ذائبة في الماء.'},
+            {formula:'KNO₃',name:'نترات البوتاسيوم',state:'ذائب في الماء',en:'Soluble',ions:'K⁺(aq) + NO₃⁻(aq)',obs:'تتفكك البلورات إلى أيونات موزعة في الماء دون راسب.',rule:'النترات وأملاح البوتاسيوم ذائبة.'},
+            {formula:'AgCl',name:'كلوريد الفضة',state:'شحيح الذوبان / راسب',en:'Insoluble / Precipitate',ions:'AgCl(s)',obs:'يبقى الراسب الصلب ولا يتحول إلى محلول مائي متجانس.',rule:'AgCl من الاستثناءات المهمة للكلوريدات.'},
+            {formula:'BaSO₄',name:'كبريتات الباريوم',state:'غير ذائب / راسب',en:'Insoluble / Precipitate',ions:'BaSO₄(s)',obs:'يتكون راسب أبيض ثابت في الماء.',rule:'BaSO₄ من أشهر استثناءات ذوبانية الكبريتات.'},
+            {formula:'CaCO₃',name:'كربونات الكالسيوم',state:'غير ذائب / راسب',en:'Insoluble / Precipitate',ions:'CaCO₃(s)',obs:'تظل المادة كرواسب صلبة بيضاء في الماء.',rule:'معظم الكربونات غير ذائبة إلا أملاح القلويات و NH₄⁺.'},
+            {formula:'Fe(OH)₃',name:'هيدروكسيد الحديد III',state:'غير ذائب / راسب',en:'Insoluble / Precipitate',ions:'Fe(OH)₃(s)',obs:'راسب بني محمر جيلاتيني لا يذوب في الماء.',rule:'معظم الهيدروكسيدات غير ذائبة، مع استثناءات معروفة.'},
+            {formula:'NH₄NO₃',name:'نترات الأمونيوم',state:'ذائب في الماء',en:'Soluble',ions:'NH₄⁺(aq) + NO₃⁻(aq)',obs:'يذوب الملح وتنتشر الأيونات في الماء مكونة محلولًا متجانسًا.',rule:'أملاح الأمونيوم والنترات ذائبة.'},
+            {formula:'AgI',name:'يوديد الفضة',state:'غير ذائب / راسب',en:'Insoluble / Precipitate',ions:'AgI(s)',obs:'يبقى الراسب الأصفر ولا يذوب في الماء.',rule:'AgI من أملاح الفضة غير الذائبة.'}
+        ];
+
+        function initSolubilityLab(){
+            const sel=document.getElementById('solubilitySelect'); if(!sel) return;
+            sel.innerHTML=SOLUBILITY_DATA.map((x,i)=>`<option value="${i}">${x.name} — ${x.formula}</option>`).join('');
+            updateSolubilityLab();
+        }
+
+        function updateSolubilityLab(){
+            const sel=document.getElementById('solubilitySelect'); if(!sel) return;
+            const x=SOLUBILITY_DATA[Number(sel.value)||0];
+            document.getElementById('solFormula').textContent=x.formula;
+            document.getElementById('solName').textContent=x.name;
+            document.getElementById('solState').textContent=x.state;
+            document.getElementById('solState').className='text-xl font-black mt-1 '+(x.state.startsWith('ذائب')?'text-emerald-300':'text-amber-300');
+            document.getElementById('solStateEn').textContent=x.en;
+            document.getElementById('solObservation').textContent=x.obs;
+            document.getElementById('solIons').textContent=x.ions;
+            document.getElementById('solRule').textContent=x.rule;
+            drawSolubilityScene(x);
+        }
+
+        function drawSolubilityScene(x){
+            const c=document.getElementById('solubilityCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+            const soluble=x.state.startsWith('ذائب');
+            const g=ctx.createLinearGradient(0,0,0,330); g.addColorStop(0,'#102b3a');g.addColorStop(1,'#07131f');ctx.fillStyle=g;ctx.fillRect(0,0,330,330);
+            ctx.fillStyle='rgba(255,255,255,.035)'; for(let i=0;i<8;i++)ctx.fillRect(30+i*40,0,1,330);
+            
+            ctx.save();ctx.shadowBlur=18;ctx.shadowColor='rgba(0,0,0,.5)';ctx.fillStyle='rgba(125,211,252,.10)';ctx.strokeStyle='rgba(186,230,253,.58)';ctx.lineWidth=3;
+            ctx.beginPath();ctx.moveTo(90,65);ctx.lineTo(95,270);ctx.quadraticCurveTo(98,292,165,294);ctx.quadraticCurveTo(232,292,235,270);ctx.lineTo(240,65);ctx.stroke();ctx.fill();ctx.restore();
+            ctx.fillStyle='rgba(103,232,249,.12)';ctx.fillRect(98,145,129,125);ctx.strokeStyle='rgba(103,232,249,.25)';ctx.strokeRect(98,145,129,125);
+            if(soluble){
+                for(let i=0;i<42;i++){let px=106+(i*53)%112, py=156+(i*71)%100;ctx.fillStyle=i%2?'#67e8f9':'#f8fafc';ctx.globalAlpha=.62;ctx.beginPath();ctx.arc(px,py,2.4,0,Math.PI*2);ctx.fill();}
+                ctx.globalAlpha=1;ctx.fillStyle='#a5f3fc';ctx.font='800 12px Cairo';ctx.textAlign='center';ctx.fillText('IONS DISPERSED',162,132);
+            }else{
+                ctx.fillStyle=x.formula==='AgI'?'#eab308':x.formula==='Fe(OH)₃'?'#a52a22':'#e5e7eb';
+                for(let i=0;i<26;i++){let px=108+(i*31)%110,py=250-(i%5)*5;ctx.beginPath();ctx.arc(px,py,3+(i%4),0,Math.PI*2);ctx.fill();}
+                ctx.fillStyle='#fde68a';ctx.font='800 12px Cairo';ctx.textAlign='center';ctx.fillText('SOLID REMAINS',162,132);
+            }
+            ctx.fillStyle='rgba(255,255,255,.22)';ctx.fillRect(86,58,160,5);
+        }
+
+        const DIST_SALTS = {
+            Na2CO3:  {ion:'CO3',  ar:'كربونات الصوديوم',   f:'Na₂CO₃'},
+            NaHCO3:  {ion:'HCO3', ar:'بيكربونات الصوديوم', f:'NaHCO₃'},
+            Na2SO3:  {ion:'SO3',  ar:'كبريتيت الصوديوم',   f:'Na₂SO₃'},
+            Na2S:    {ion:'S',    ar:'كبريتيد الصوديوم',   f:'Na₂S'},
+            Na2S2O3: {ion:'S2O3', ar:'ثيوكبريتات الصوديوم', f:'Na₂S₂O₃'},
+            NaCl:    {ion:'Cl',   ar:'كلوريد الصوديوم',    f:'NaCl'},
+            NaI:     {ion:'I',    ar:'يوديد الصوديوم',     f:'NaI'}
+        };
+        function distEq(category, group, ionId, type) {
+            const item = ((REACTION_DATA[category] || {})[group] || []).find(i => i.id === ionId);
+            return (item && item[type] && item[type].equation) || '';
+        }
+        const DIST_TESTS = {
+            hcl: {
+                ar:'حمض الهيدروكلوريك المخفف (Dil. HCl)', en:'Dilute hydrochloric acid',
+                obs: {
+                    CO3:  {t:'فوران وتصاعد غاز CO₂ عديم اللون والرائحة يعكّر ماء الجير', s:'غاز CO₂ يعكّر ماء الجير', why:'حمض الكربونيك ضعيف غير ثابت فيتحلل إلى CO₂ وماء', eq:()=>distEq('anions','hcl','CO3','main')},
+                    HCO3: {t:'فوران وتصاعد غاز CO₂ عديم اللون والرائحة يعكّر ماء الجير', s:'غاز CO₂ يعكّر ماء الجير', why:'حمض الكربونيك ضعيف غير ثابت فيتحلل إلى CO₂ وماء', eq:()=>distEq('anions','hcl','HCO3','main')},
+                    SO3:  {t:'تصاعد غاز SO₂ نفّاذ الرائحة يخضّر ورقة ثنائي كرومات البوتاسيوم المحمضة', s:'غاز SO₂ نفّاذ الرائحة', why:'حمض الكبريتوز غير ثابت فيتحلل إلى SO₂ وماء', eq:()=>distEq('anions','hcl','SO3','main')},
+                    S:    {t:'تصاعد غاز H₂S برائحة البيض الفاسد يسوّد ورقة أسيتات الرصاص II', s:'غاز H₂S برائحة البيض الفاسد', why:'يتصاعد H₂S الغازي ذو الرائحة الكريهة', eq:()=>distEq('anions','hcl','S','main')},
+                    S2O3: {t:'تصاعد غاز SO₂ نفّاذ الرائحة مع عكارة (راسب) أصفر من الكبريت', s:'غاز SO₂ مع راسب كبريت أصفر', why:'حمض الثيوكبريتيك غير ثابت فيتحلل إلى SO₂ وكبريت أصفر', eq:()=>distEq('anions','hcl','S2O3','main')},
+                    Cl:   {t:'لا يحدث تفاعل ظاهر (لا غاز ولا راسب)', s:'لا تفاعل ظاهر', why:'الكلوريد أنيون حمض قوي فلا يتصاعد منه غاز مع HCl المخفف', eq:()=>'NaCl + HCl(dil.) → no reaction'},
+                    I:    {t:'لا يحدث تفاعل ظاهر (لا غاز ولا راسب)', s:'لا تفاعل ظاهر', why:'اليوديد أنيون حمض قوي فلا يتصاعد منه غاز مع HCl المخفف', eq:()=>'NaI + HCl(dil.) → no reaction'}
+                }
+            },
+            mgso4: {
+                ar:'محلول كبريتات المغنيسيوم (MgSO₄) على البارد', en:'Magnesium sulfate solution (cold)',
+                obs: {
+                    CO3:  {t:'يتكون راسب أبيض من MgCO₃ على البارد', s:'راسب أبيض على البارد', why:'MgCO₃ شحيح الذوبان فيترسب على البارد', eq:()=>distEq('anions','hcl','CO3','conf')},
+                    HCO3: {t:'محلول رائق على البارد، ويظهر راسب أبيض مع فقاقيع CO₂ بعد التسخين', s:'محلول رائق على البارد', why:'Mg(HCO₃)₂ ذائب على البارد ولا يترسب إلا بالتسخين', eq:()=>distEq('anions','hcl','HCO3','conf')}
+                }
+            },
+            agno3: {
+                ar:'محلول نترات الفضة (AgNO₃)', en:'Silver nitrate solution',
+                obs: {
+                    SO3:  {t:'راسب أبيض من Ag₂SO₃ يسود بالتسخين', s:'راسب أبيض يسود بالتسخين', why:'كبريتيت الفضة أبيض ويتحول إلى فضة سوداء بالتسخين', eq:()=>distEq('anions','hcl','SO3','conf')},
+                    S:    {t:'راسب أسود مباشر من Ag₂S', s:'راسب أسود مباشر', why:'كبريتيد الفضة Ag₂S أسود شديد عدم الذوبان', eq:()=>distEq('anions','hcl','S','conf')},
+                    S2O3: {t:'راسب أبيض يتحول بسرعة إلى أصفر ثم بني ثم أسود (Ag₂S)', s:'راسب أبيض يسود بسرعة (أصفر ← بني ← أسود)', why:'ثيوكبريتات الفضة غير ثابتة وتتحول إلى كبريتيد الفضة الأسود', eq:()=>'Na₂S₂O₃(aq) + 2AgNO₃(aq) → 2NaNO₃(aq) + Ag₂S₂O₃(s)↓ ; Ag₂S₂O₃(s) + H₂O(l) → Ag₂S(s)↓ + H₂SO₄(aq)'},
+                    Cl:   {t:'راسب أبيض من AgCl يتحول بنفسجيًا بالضوء ويذوب في النشادر', s:'راسب أبيض يذوب في النشادر', why:'AgCl أبيض ويذوب في محلول النشادر', eq:()=>distEq('anions','h2so4','Cl','conf')},
+                    I:    {t:'راسب أصفر من AgI لا يذوب في النشادر', s:'راسب أصفر لا يذوب في النشادر', why:'AgI أصفر ولا يذوب في محلول النشادر', eq:()=>distEq('anions','h2so4','I','conf')}
+                }
+            },
+            h2so4: {
+                ar:'حمض الكبريتيك المركز مع التسخين', en:'Concentrated H₂SO₄ + heating',
+                obs: {
+                    Cl: {t:'غاز HCl عديم اللون يكوّن سحبًا بيضاء مع ساق مبللة بالنشادر', s:'غاز عديم اللون وسحب بيضاء مع النشادر', why:'يتصاعد HCl عديم اللون ولا يتأكسد', eq:()=>distEq('anions','h2so4','Cl','main')},
+                    I:  {t:'أبخرة بنفسجية من I₂ تزرّق ورقة النشا', s:'أبخرة بنفسجية', why:'يتأكسد HI بالحمض المركز فيتصاعد اليود البنفسجي', eq:()=>distEq('anions','h2so4','I','main')}
+                }
+            }
+        };
+
+        function distRow(tag, salt, test) {
+            const o = test.obs[salt.ion];
+            const eq = o.eq();
+            return `
+                <div class="bg-slate-950 p-3 rounded-xl border ${tag === 1 ? 'border-sky-900/50' : 'border-amber-900/50'} space-y-1">
+                    <span class="font-bold ${tag === 1 ? 'text-sky-300' : 'text-amber-300'}">${tag === 1 ? 'الأنبوبة الأولى' : 'الأنبوبة الثانية'} (${salt.ar} - ${salt.f}):</span>
+                    <p class="text-slate-200 font-bold">${o.t}</p>
+                    ${eq ? `<div class="equation-text">${eq}</div>` : ''}
+                </div>`;
+        }
+
+        function updateDistinguishResult() {
+            const k1 = document.getElementById('distSalt1').value;
+            const k2 = document.getElementById('distSalt2').value;
+            const box = document.getElementById('distResultBox');
+
+            if (k1 === k2) {
+                box.innerHTML = `<p class="text-xs text-rose-400 font-bold">برجاء اختيار ملحين مختلفين للتمييز بينهما!</p>`;
+                return;
+            }
+            const a = DIST_SALTS[k1], b = DIST_SALTS[k2];
+            if (!a || !b) return;
+            const ids = [a.ion, b.ion];
+            const has = id => ids.includes(id);
+
+            let mainKey = 'hcl';
+            if (has('CO3') && has('HCO3')) mainKey = 'mgso4';
+            else if (has('Cl') && has('I')) mainKey = 'agno3';
+            const main = DIST_TESTS[mainKey];
+
+            let confirmHtml = '';
+            if (mainKey === 'mgso4') {
+                confirmHtml = 'سخّن الأنبوبتين: يظهر راسب أبيض مع فقاقيع CO₂ في أنبوبة البيكربونات فقط (Mg(HCO₃)₂ ← MgCO₃↓ + H₂O + CO₂↑)، بينما يظل راسب الكربونات كما هو.';
+            } else if (mainKey === 'agno3') {
+                const t = DIST_TESTS.h2so4;
+                confirmHtml = `أضف ${t.ar} إلى الملحين الصلبين: ${a.ar} ← ${t.obs[a.ion].t}، بينما ${b.ar} ← ${t.obs[b.ion].t}.`;
+            } else {
+                const t = DIST_TESTS.agno3;
+                if (t.obs[a.ion] && t.obs[b.ion]) {
+                    confirmHtml = `أضف ${t.ar} إلى محلول كل ملح: ${a.ar} ← ${t.obs[a.ion].t}، بينما ${b.ar} ← ${t.obs[b.ion].t}.`;
+                } else {
+                    const other = t.obs[a.ion] ? a : b;
+                    confirmHtml = `أكّد الملح الآخر (غير الكربونات) بإضافة ${t.ar} إلى محلوله: ${other.ar} ← ${t.obs[other.ion].t}.`;
+                }
+            }
+
+            const o1 = main.obs[a.ion], o2 = main.obs[b.ion];
+            const sameGasNote = (mainKey === 'hcl' && (a.ion === 'SO3' || b.ion === 'SO3') && (has('CO3') || has('HCO3')))
+                ? '<p class="text-[11px] text-amber-300 mt-2">تنبيه: كلا الغازين (CO₂ و SO₂) يعكّر ماء الجير، لذلك يعتمد التمييز على رائحة SO₂ النفّاذة وتخضير ورقة ثنائي الكرومات.</p>'
+                : '';
+
+            box.innerHTML = `
+                <div class="distinction-step pl-4 space-y-1">
+                    <div class="text-[10px] font-black tracking-widest text-sky-400">الخطوة 1 · الكاشف المميّز</div>
+                    <div class="text-sm font-bold text-slate-100">${main.ar}</div>
+                    <div class="text-xs text-slate-400 font-mono">${main.en}</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-xs">
+                    ${distRow(1, a, main)}
+                    ${distRow(2, b, main)}
+                </div>
+                <div class="distinction-verdict p-4 rounded-xl text-xs space-y-1">
+                    <div class="font-black text-sky-300">الحكم</div>
+                    <p class="text-slate-200 font-bold">الأنبوبة التي تعطي «${o1.s}» هي ${a.ar} (${a.f})، والأنبوبة التي تعطي «${o2.s}» هي ${b.ar} (${b.f}).</p>
+                    ${sameGasNote}
+                </div>
+                <div class="distinction-step pl-4 space-y-1">
+                    <div class="text-[10px] font-black tracking-widest text-indigo-300">لماذا ينجح الاختبار؟</div>
+                    <p class="text-xs text-slate-300">${a.ar}: ${o1.why}. ${b.ar}: ${o2.why}.</p>
+                </div>
+                <div class="distinction-step pl-4 space-y-1">
+                    <div class="text-[10px] font-black tracking-widest text-emerald-300">الاختبار التأكيدي</div>
+                    <p class="text-xs text-slate-300">${confirmHtml}</p>
+                </div>
+            `;
+        }
+
+        function renderEqLibrary() {
+            const grid = document.getElementById('eqLibraryGrid');
+            const query = document.getElementById('eqSearch').value.toLowerCase();
+            grid.innerHTML = "";
+
+            let allEquations = [];
+            ['hcl', 'h2so4', 'bacl2'].forEach(k => {
+                REACTION_DATA.anions[k].forEach(i => {
+                    allEquations.push({ title: i.nameAr + ' - أساسية', eq: i.main.equation });
+                    allEquations.push({ title: i.nameAr + ' - تأكيدية', eq: i.conf.equation });
+                });
+            });
+            REACTION_DATA.cations.group.forEach(i => {
+                allEquations.push({ title: i.nameAr + ' - أساسية', eq: i.main.equation });
+                allEquations.push({ title: i.nameAr + ' - تأكيدية', eq: i.conf.equation });
+            });
+
+            allEquations.filter(e => e.title.toLowerCase().includes(query) || e.eq.toLowerCase().includes(query))
+                .forEach(e => {
+                    const row = document.createElement('div');
+                    row.className = "bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-2";
+                    row.innerHTML = `
+                        <span class="text-xs font-bold text-sky-400 md:w-1/4">${e.title}</span>
+                        <span class="text-sm font-mono text-yellow-300 dir-ltr text-left md:w-3/4 overflow-x-auto">${e.eq}</span>
+                    `;
+                    grid.appendChild(row);
+                });
+        }
+
+        const QUIZ_QUESTIONS = [
+            {
+                qAr: "عند إضافة محلول نترات الفضة إلى كبريتيت الصوديوم يتكون راسب:",
+                qEn: "Adding Silver Nitrate to Sodium Sulfite forms a precipitate that:",
+                options: [
+                    "أبيض يسود بالتسخين (White ppt turning black on heat)",
+                    "أسود مباشر (Direct Black ppt)",
+                    "أصفر لا يذوب في النشادر (Yellow ppt insoluble in NH3)",
+                    "أبيض جيلاتيني (White gelatinous ppt)"
+                ],
+                correct: 0
+            },
+            {
+                qAr: "الغاز الذي يزرق ورقة مبللة بمحلول النشا هو أبخرة:",
+                qEn: "The vapors that turn starch paper BLUE are:",
+                options: [
+                    "البروم البرتقالية الحمراء (Orange-red Bromine)",
+                    "اليود البنفسجية (Violet Iodine)",
+                    "ثاني أكسيد النيتروجين (Reddish-brown NO2)",
+                    "كلوريد الهيدروجين (Colorless HCl)"
+                ],
+                correct: 1
+            },
+            {
+                qAr: "الكاتيون الذي يعطي لهب بنزن لوناً أحمر طوبي هو:",
+                qEn: "The cation that gives a BRICK-RED Bunsen flame is:",
+                options: ["Al³⁺", "Fe²⁺", "Ca²⁺", "Fe³⁺"],
+                correct: 2
+            }
+        ];
+
+        let quizIndex = 0;
+        let score = 0;
+        let totalAnswered = 0;
+
+        function loadQuizQuestion() {
+            const q = QUIZ_QUESTIONS[quizIndex];
+            const card = document.getElementById('quizCard');
+
+            card.innerHTML = `
+                <div class="space-y-1">
+                    <p class="text-sm font-bold text-slate-100">${q.qAr}</p>
+                    <p class="text-xs font-mono text-sky-400">${q.qEn}</p>
+                </div>
+                <div class="grid grid-cols-1 gap-2 pt-2">
+                    ${q.options.map((opt, idx) => `
+                        <button onclick="checkAnswer(${idx})" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-right text-xs font-semibold text-slate-200 transition">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkAnswer(chosenIdx) {
+            const q = QUIZ_QUESTIONS[quizIndex];
+            totalAnswered++;
+            if (chosenIdx === q.correct) score++;
+
+            document.getElementById('quizScore').textContent = score;
+            document.getElementById('quizTotal').textContent = totalAnswered;
+
+            quizIndex = (quizIndex + 1) % QUIZ_QUESTIONS.length;
+            loadQuizQuestion();
+        }
+    </script>
+</body>
+</html>
