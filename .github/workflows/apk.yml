@@ -14,7 +14,7 @@ jobs:
         uses: kimhuilim/web-to-app-action@main
         with:
           app-name: "My App"
-          build-folder-path: "./index.html"
+          build-folder-path: "."
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
